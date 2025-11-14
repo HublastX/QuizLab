@@ -19,6 +19,11 @@ module.exports = {
                     hover: "var(--secondary-hover)",
                     text: "#000000",
                 },
+                "layout":{
+                    background: "var(--background)",
+                    foreground: "var(--foreground)",
+                    card: "var(--card)",
+                }
             },
         },
     },

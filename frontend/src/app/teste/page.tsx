@@ -16,6 +16,7 @@ export default function Pege() {
                 <Input placeholder="oi"/>
             </div>
             <div className="bg-linear-to-r from-qorange-hover to-qblue-default ">oi</div>
+            <div className="bg-layout-card h-30">card</div>
             <LoadingScreen />
         </div>
     );
