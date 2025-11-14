@@ -4,6 +4,7 @@ class Settings(BaseSettings):
     secret_key: str = "secret"
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 60
+    gemini_api_key: str = ""
 
     class Config:
         env_file = ".env"
