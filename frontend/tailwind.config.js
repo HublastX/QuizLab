@@ -4,26 +4,60 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                "qorange": {
+                qorange: {
                     default: "var(--primary)",
                     hover: "var(--primary-hover)",
                     text: "#ffffff",
+                    50: "#fff7ed",
+                    100: "#ffedd5",
+                    200: "#fed7aa",
+                    300: "#fdba74",
+                    400: "#fb923c",
+                    500: "#f97316",
+                    600: "#c2410c",
+                    700: "#9a3412",
+                    800: "#7c2d12",
+                    900: "#431407",
                 },
-                "qblue": {
-                    default: '#3b82f6',
-                    hover: '#2563eb',
+                qblue: {
+                    default: "#3b82f6",
+                    hover: "#2563eb",
                     text: "#ffffff",
+                    50: "#eff6ff",
+                    100: "#dbeafe",
+                    200: "#bfdbfe",
+                    300: "#93c5fd",
+                    400: "#60a5fa",
+                    500: "#3b82f6",
+                    600: "#1d4ed8",
+                    700: "#1e40af",
+                    800: "#1e3a8a",
+                    900: "#172554",
                 },
-                "qyellow": {
+                qyellow: {
                     default: "var(--secondary)",
                     hover: "var(--secondary-hover)",
                     text: "#000000",
+                    50: "#fefce8",
+                    100: "#fef9c3",
+                    200: "#fef08a",
+                    300: "#fde047",
+                    400: "#facc15",
+                    500: "#eab308",
+                    600: "#a16207",
+                    700: "#854d0e",
+                    800: "#713f12",
+                    900: "#422006",
                 },
-                "layout":{
+                badge: {
+                    success: "var(--correct)",
+                    error: "var(--incorrect)",
+                },
+                layout: {
                     background: "var(--background)",
                     foreground: "var(--foreground)",
                     card: "var(--card)",
-                }
+                },
             },
         },
     },
