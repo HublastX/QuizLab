@@ -1,12 +1,14 @@
 @import "tailwindcss";
+@config "../../tailwind.config.js";
+
 
 :root,
 html[data-theme="light"] {
     --background: #f9fafb;
     --foreground: #111827;
 
-    --primary: #3b82f6;
-    --primary-hover: #2563eb;
+    --primary: #f97316;        
+    --primary-hover: #ea580c;
 
     --secondary: #facc15;
     --secondary-hover: #eab308;
@@ -43,8 +45,9 @@ html[data-theme="dark"] {
     --background: #0f172a;
     --foreground: #e2e8f0;
 
-    --primary: #60a5fa;
-    --primary-hover: #3b82f6;
+
+    --primary: #fb923c;          
+    --primary-hover: #f97316;     
 
     --secondary: #facc15;
     --secondary-hover: #eab308;
