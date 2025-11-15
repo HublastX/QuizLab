@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import LoadingScreen from "@/layout/LoadingScreen";
 
 export default function Pege() {
     return (
@@ -17,7 +16,6 @@ export default function Pege() {
             </div>
             <div className="bg-linear-to-r from-qorange-hover to-qblue-default ">oi</div>
             <div className="bg-layout-card h-30">card</div>
-            <LoadingScreen />
         </div>
     );
 }
