@@ -1,4 +1,4 @@
-import { CiAlarmOn } from "react-icons/ci";
+import { CiAlarmOn, CiBasketball } from "react-icons/ci";
 import HomeCard from "./card";
 
 export default function Home() {
@@ -13,7 +13,6 @@ export default function Home() {
     //     },
 
     // ];
-
 
     return (
         <div className="grid grid-cols-2 space-x-9 h-full mt-6">
@@ -82,9 +81,74 @@ export default function Home() {
                     />
                 </div>
             </div>
-            <div>
-                <div className="bg-layout-card p-4 rounded-lg shadow-md">
-                    Ultimo quiz jogado
+            <div className="grid grid-cols-1 gap-6">
+                <div className="grid grid-cols-1 gap-6">
+                    <h2 className="text-2xl font-black">Tema</h2>
+                    <div className="grid grid-cols-3 gap-3 overflow-auto">
+                        <HomeCard
+                            title="pitagoras"
+                            icon={<CiBasketball />}
+                            description="Descrição 3"
+                            href="#"
+                            ariaLabel="Título 3 - Descrição 3"
+                            color="play"
+                            variant="theme"
+                        />
+                        <HomeCard
+                            title="playstation"
+                            icon={<CiBasketball />}
+                            description="Descrição 3"
+                            href="#"
+                            ariaLabel="Título 3 - Descrição 3"
+                            color="play"
+                            variant="theme"
+                        />
+                        <HomeCard
+                            title="Arvore"
+                            icon={<CiBasketball />}
+                            description="Descrição 3"
+                            href="#"
+                            ariaLabel="Título 3 - Descrição 3"
+                            color="play"
+                            variant="theme"
+                        />
+                        <HomeCard
+                            title="luva de pedreiro"
+                            icon={<CiBasketball />}
+                            description="Descrição 3"
+                            href="#"
+                            ariaLabel="Título 3 - Descrição 3"
+                            color="play"
+                            variant="theme"
+                        />
+                        <HomeCard
+                            title="luva de pedreiro"
+                            icon={<CiBasketball />}
+                            description="Descrição 3"
+                            href="#"
+                            ariaLabel="Título 3 - Descrição 3"
+                            color="play"
+                            variant="theme"
+                        />
+                        <HomeCard
+                            title="luva de pedreiro"
+                            icon={<CiBasketball />}
+                            description="Descrição 3"
+                            href="#"
+                            ariaLabel="Título 3 - Descrição 3"
+                            color="play"
+                            variant="theme"
+                        />
+                        <HomeCard
+                            title="luva de pedreiro"
+                            icon={<CiBasketball />}
+                            description="Descrição 3"
+                            href="#"
+                            ariaLabel="Título 3 - Descrição 3"
+                            color="play"
+                            variant="theme"
+                        />
+                    </div>
                 </div>
                 <div className="bg-layout-card p-4 rounded-lg shadow-md">
                     Configurações de acessibilidade
