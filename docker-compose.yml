@@ -1,0 +1,16 @@
+services:
+  quizlab:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - ${PORT}:${PORT}
+    env_file:
+      - .env
+ 
+    networks:
+      - project_network
+
+networks:
+  project_network:
+    external: true
