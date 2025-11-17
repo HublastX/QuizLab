@@ -24,7 +24,7 @@ export default function LoadingProvider({ children }: { children: ReactNode }) {
     return (
         <div className="relative h-full w-full">
             {isLoading && <LoadingScreen />}
-            <div className={isLoading ? "opacity-0 pointer-events-none" : "opacity-100"}>
+            <div className={isLoading ? "opacity-0 pointer-events-none" : "opacity-100 h-full"}>
                 {children}
             </div>
         </div>

@@ -12,10 +12,21 @@ export default function Pege() {
                 <Button size="lg">oi</Button>
                 <Button size="md">oi</Button>
                 <Button size="sm">oi</Button>
-                <Input placeholder="oi"/>
+                <Input placeholder="oi" />
             </div>
-            <div className="bg-linear-to-r from-qorange-hover to-qblue-default ">oi</div>
+            <div className="bg-linear-to-r from-qorange-hover to-qblue-default ">
+                oi
+            </div>
             <div className="bg-layout-card h-30">card</div>
+            <div class="bg-category-create p-4 text-white">
+                Create - deve ser laranja
+            </div>
+            <div class="bg-category-ranking p-4 text-white">
+                Ranking - deve ser azul
+            </div>
+            <div className="bg-category-play p-4 text-black">
+                Play - deve ser amarelo
+            </div>
         </div>
     );
 }

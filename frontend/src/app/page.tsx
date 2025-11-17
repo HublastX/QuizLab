@@ -1,8 +1,3 @@
-
 export default function Home() {
-    return (
-        <div >
-
-        </div>
-    );
+    return <div>aqui é uma landipage explicando oq é</div>;
 }
