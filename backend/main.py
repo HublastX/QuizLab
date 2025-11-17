@@ -5,7 +5,7 @@ from app.core.database.database import create_all_tables
 from app.core.middleware.middleware import cors_middleware  
 from app.core.settings.settings import settings
 
-app = FastAPI(root_path="quiz-lab-backend/")
+app = FastAPI(root_path="/quiz-lab-backend")
 
 register_routes(app)
 cors_middleware(app)
