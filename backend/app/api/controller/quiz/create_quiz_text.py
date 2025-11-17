@@ -1,15 +1,15 @@
 from fastapi import HTTPException, status
 
 from app.schemas.quiz_schemas import CreateQuizSchema, QuizResponseSchema
-from app.services.llm.agente_quiz import AgenteQuiz
+from app.services.llm.agente_quiz import QuizAgent
 
 
-def criar_quiz(data: CreateQuizSchema) -> QuizResponseSchema:
+def create_quiz_text(data: CreateQuizSchema) -> QuizResponseSchema:
     try:
-        agente = AgenteQuiz(texto=data.texto)
-        resultado = agente.criar_quiz(
-            numero_perguntas=data.numero_perguntas,
-            numero_alternativas=data.numero_alternativas
+        agent = QuizAgent(text=data.text)
+        resultado = agent.create_quiz(
+            num_questions=data.num_questions,
+            num_alternatives=data.num_alternatives
         )
         return QuizResponseSchema(**resultado)
     except ValueError as e:
