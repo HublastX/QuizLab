@@ -1,25 +1,42 @@
-import google.generativeai as genai
 import json
-from app.services.llm.prompts.promtps import PROMPT_CRAETE_QUIZ
+
+from app.services.llm.prompts.promtps import PROMPT_CREATE_QUIZ
+from openai import OpenAI
 from app.core.settings.settings import settings
 
 
-class AgenteQuiz:
-    def __init__(self, texto: str):
-        self.texto = texto
-        genai.configure(api_key=settings.gemini_api_key)
+client = OpenAI(
+    base_url="https://router.huggingface.co/v1",
+    api_key=settings.llm_api_key,
+)
 
-    def criar_quiz(self, numero_perguntas: int = 5, numero_alternativas: int = 4):
-        prompt = PROMPT_CRAETE_QUIZ.format(
-            texto=self.texto,
-            numero_perguntas=numero_perguntas,
-            numero_alternativas=numero_alternativas
+
+class QuizAgent:
+    def __init__(self, text: str):
+        self.text = text
+        self.client = client
+
+    def create_quiz(self, num_questions: int = 5, num_alternatives: int = 4):
+        prompt = PROMPT_CREATE_QUIZ.format(
+            text=self.text,
+            num_questions=num_questions,
+            num_alternatives=num_alternatives
         )
         
-        model = genai.GenerativeModel('gemini-2.5-flash')
-        response = model.generate_content(prompt)
+        system_message = "You are QuizLab, an AI agent that creates quizzes from text."
         
-        response_text = response.text.strip()
+        completion = self.client.chat.completions.create(
+            model="openai/gpt-oss-20b:together",
+            messages=[
+                {"role": "system", "content": system_message},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=2048,
+            temperature=0.2,
+            top_p=0.95,
+        )
+        
+        response_text = completion.choices[0].message.content.strip()
         
         if "```json" in response_text:
             response_text = response_text.split("```json")[1].split("```")[0].strip()
@@ -29,4 +46,4 @@ class AgenteQuiz:
         try:
             return json.loads(response_text)
         except json.JSONDecodeError:
-            raise ValueError(f"Erro ao parsear resposta do Gemini: {response_text}")
+            raise ValueError(f"Error parsing response: {response_text}")

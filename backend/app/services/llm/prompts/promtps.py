@@ -1,12 +1,12 @@
-PROMPT_CRAETE_QUIZ = """Analise o seguinte texto e crie exatamente {numero_perguntas} perguntas de múltipla escolha sobre o conteúdo e exatamente {numero_alternativas} alternativas para cada pergunta.
+PROMPT_CREATE_QUIZ = """Analise o seguinte texto e crie exatamente {num_questions} perguntas de múltipla escolha sobre o conteúdo e exatamente {num_alternatives} alternativas para cada pergunta.
 
     TEXTO:
-    {texto}
+    {text}
 
     INSTRUÇÕES:
-    1. Crie {numero_perguntas} perguntas baseadas no texto acima.
-    2. Crie {numero_alternativas} alternativas para cada pergunta.
-    3. Cada pergunta deve ter exatamente {numero_alternativas} alternativas.
+    1. Crie {num_questions} perguntas baseadas no texto acima.
+    2. Crie {num_alternatives} alternativas para cada pergunta.
+    3. Cada pergunta deve ter exatamente {num_alternatives} alternativas.
     4. Apenas uma alternativa deve estar correta para cada pergunta.
     5. Indique qual alternativa é a correta para cada pergunta.
     6. Para cada alternativa, inclua um campo "explicacao" que explique brevemente:
