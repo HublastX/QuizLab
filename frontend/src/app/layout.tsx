@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeWatcher } from "@/components/theme-watcher";
 import Header from "@/layout/Header";
 import LoadingProvider from "@/context/LoadingProvider";
+import { HomeProvider } from "@/context/Home";
 
 const poppins = Poppins({
     weight: ["300", "400", "500", "600", "700"],
@@ -25,18 +26,18 @@ export default function RootLayout({
     return (
         <html lang="pt-BR" className={poppins.variable}>
             <body className="font-sans antialiased bg-layout-background text-layout-foreground h-screen flex flex-col overflow-hidden">
+                <HomeProvider>
+                    <Header />
+                    <ThemeWatcher />
 
-                <Header />
-                <ThemeWatcher />
-
-                <main className="flex-1 relative overflow-hidden">
-                    <LoadingProvider>
-                        <div className="h-full overflow-auto flex flex-col p-4 bg-layout-background text-layout-foreground">
-                            {children}
-                        </div>
-                    </LoadingProvider>
-                </main>
-
+                    <main className="h-full relative overflow-hidden">
+                        <LoadingProvider>
+                            <div className="h-full overflow-auto flex flex-col p-4 bg-layout-background text-layout-foreground">
+                                {children}
+                            </div>
+                        </LoadingProvider>
+                    </main>
+                </HomeProvider>
             </body>
         </html>
     );

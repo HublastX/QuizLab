@@ -58,6 +58,12 @@ module.exports = {
                     foreground: "var(--foreground)",
                     card: "var(--card)",
                 },
+                category: {
+                    create: "var(--primary)",
+                    ranking: "#3b82f6",
+                    play: "var(--secondary)",
+
+                },
             },
         },
     },
