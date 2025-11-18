@@ -5,6 +5,8 @@ import { ThemeWatcher } from "@/components/theme-watcher";
 import Header from "@/layout/Header";
 import LoadingProvider from "@/context/LoadingProvider";
 import { HomeProvider } from "@/context/Home";
+import VLibras from "@/components/VLibras";
+import ColorModeProvider from "@/context/ColorModeProvider";
 
 const poppins = Poppins({
     weight: ["300", "400", "500", "600", "700"],
@@ -29,12 +31,14 @@ export default function RootLayout({
                 <HomeProvider>
                     <Header />
                     <ThemeWatcher />
-
                     <main className="h-full relative overflow-hidden">
                         <LoadingProvider>
-                            <div className="h-full overflow-auto flex flex-col p-4 bg-layout-background text-layout-foreground">
-                                {children}
-                            </div>
+                            <ColorModeProvider>
+                                <div className="h-full overflow-auto flex flex-col p-4 bg-layout-background text-layout-foreground">
+                                    <VLibras />
+                                    {children}
+                                </div>
+                            </ColorModeProvider>
                         </LoadingProvider>
                     </main>
                 </HomeProvider>
