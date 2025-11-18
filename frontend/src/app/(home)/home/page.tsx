@@ -1,5 +1,6 @@
 import { CiAlarmOn, CiBasketball } from "react-icons/ci";
 import HomeCard from "./card";
+import Acessibilidade from "./acessibilidade";
 
 export default function Home() {
     // const cards = [
@@ -15,8 +16,8 @@ export default function Home() {
     // ];
 
     return (
-        <div className="grid grid-cols-2 space-x-9 h-full mt-6">
-            <div className="h-full flex flex-col gap-14">
+        <div className="flex h-full mt-6 space-x-28">
+            <div className="flex-1 h-full flex flex-col gap-10">
                 <h1 className="font-bold text-4xl">Olá, Seu Nome!</h1>
                 <div className="grid grid-cols-3 mt-3 gap-6">
                     {/* {cards.map((card, index) => (
@@ -55,36 +56,13 @@ export default function Home() {
                         ariaLabel="Título 3 - Descrição 3"
                         color="play"
                     />
-                    <HomeCard
-                        title="Título 3"
-                        icon={<CiAlarmOn />}
-                        description="Descrição 3"
-                        href="#"
-                        ariaLabel="Título 3 - Descrição 3"
-                        color="create"
-                    />
-                    <HomeCard
-                        title="Título 3"
-                        icon={<CiAlarmOn />}
-                        description="Descrição 3"
-                        href="#"
-                        ariaLabel="Título 3 - Descrição 3"
-                        color="ranking"
-                    />
-                    <HomeCard
-                        title="Título 3"
-                        icon={<CiAlarmOn />}
-                        description="Descrição 3"
-                        href="#"
-                        ariaLabel="Título 3 - Descrição 3"
-                        color="play"
-                    />
                 </div>
+                <Acessibilidade />
             </div>
-            <div className="grid grid-cols-1 gap-6">
+            <div className="">
                 <div className="grid grid-cols-1 gap-6">
-                    <h2 className="text-2xl font-black">Tema</h2>
-                    <div className="grid grid-cols-3 gap-3 overflow-auto">
+                    <h2 className="text-2xl font-black">Temas</h2>
+                    <div className="grid grid-cols-3 gap-6 overflow-auto">
                         <HomeCard
                             title="pitagoras"
                             icon={<CiBasketball />}
@@ -149,9 +127,6 @@ export default function Home() {
                             variant="theme"
                         />
                     </div>
-                </div>
-                <div className="bg-layout-card p-4 rounded-lg shadow-md">
-                    Configurações de acessibilidade
                 </div>
             </div>
         </div>
