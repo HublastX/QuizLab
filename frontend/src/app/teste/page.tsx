@@ -18,10 +18,10 @@ export default function Pege() {
                 oi
             </div>
             <div className="bg-layout-card h-30">card</div>
-            <div class="bg-category-create p-4 text-white">
+            <div className="bg-category-create p-4 text-white">
                 Create - deve ser laranja
             </div>
-            <div class="bg-category-ranking p-4 text-white">
+            <div className="bg-category-ranking p-4 text-white">
                 Ranking - deve ser azul
             </div>
             <div className="bg-category-play p-4 text-black">
