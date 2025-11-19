@@ -4,10 +4,11 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - ${PORT}:${PORT}
+      - 9080:9080
     env_file:
       - .env
- 
+    volumes:
+      - ./data:/home/uv-app-user/app/data
     networks:
       - project_network
 
