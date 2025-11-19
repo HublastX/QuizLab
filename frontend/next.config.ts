@@ -1,7 +1,9 @@
-import type { NextConfig } from "next";
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+    basePath: "/quiz-lab",
+    assetPrefix: "/quiz-lab",
+    trailingSlash: true,
 
-const nextConfig: NextConfig = {
-  /* config options here */
 };
 
 export default nextConfig;
