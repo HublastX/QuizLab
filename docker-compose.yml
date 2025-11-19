@@ -22,6 +22,8 @@ services:
       - .env
     volumes:
       - ./data:/home/uv-app-user/app/data
+    networks:
+      - project_network
 
 networks:
   project_network:
