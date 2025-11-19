@@ -1,6 +1,7 @@
 [build]
 builder = "DOCKERFILE"
-dockerfilePath = "/frontend/Dockerfile"
+context = "frontend"
+dockerfilePath = "frontend/Dockerfile"
 
 [deploy]
 startCommand = "npm start"
