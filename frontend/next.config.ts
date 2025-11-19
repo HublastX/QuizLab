@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/',
-        destination: '/home',  // automaticamente vira /quiz-lab/home
+        destination: '/quiz-lab', 
         permanent: false,
       },
     ];
