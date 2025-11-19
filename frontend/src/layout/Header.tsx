@@ -1,11 +1,8 @@
-'use client';
+"use client";
 import { Button } from "@/components/ui/button";
-import { useHome } from "@/context/Home";
 import { FiFileText, FiPlus, FiUser } from "react-icons/fi";
 
 export default function Header() {
-    const { isInHome } = useHome();
-
     return (
         <header className="h-16 bg-qorange-default shadow-lg">
             <div className="h-full px-6 flex items-center justify-between">
@@ -18,28 +15,26 @@ export default function Header() {
                     </h1>
                 </div>
 
-                {!isInHome && (
-                    <nav className="hidden md:flex items-center space-x-6">
-                        <a
-                            href="/quizzes"
-                            className="text-white hover:text-qorange-100 transition-colors duration-200 font-medium"
-                        >
-                            Quizzes
-                        </a>
-                        <a
-                            href="/create"
-                            className="text-white hover:text-qorange-100 transition-colors duration-200 font-medium"
-                        >
-                            Criar Quiz
-                        </a>
-                        <a
-                            href="/ranking"
-                            className="text-white hover:text-qorange-100 transition-colors duration-200 font-medium"
-                        >
-                            Ranking
-                        </a>
-                    </nav>
-                )}
+                <nav className="hidden md:flex items-center space-x-6">
+                    <a
+                        href="/quizzes"
+                        className="text-white hover:text-qorange-100 transition-colors duration-200 font-medium"
+                    >
+                        Quizzes
+                    </a>
+                    <a
+                        href="/create"
+                        className="text-white hover:text-qorange-100 transition-colors duration-200 font-medium"
+                    >
+                        Criar Quiz
+                    </a>
+                    <a
+                        href="/ranking"
+                        className="text-white hover:text-qorange-100 transition-colors duration-200 font-medium"
+                    >
+                        Ranking
+                    </a>
+                </nav>
 
                 <div className="flex items-center space-x-4">
                     <Button

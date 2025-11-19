@@ -4,7 +4,6 @@ import "./globals.css";
 import { ThemeWatcher } from "@/components/theme-watcher";
 import Header from "@/layout/Header";
 import LoadingProvider from "@/context/LoadingProvider";
-import { HomeProvider } from "@/context/Home";
 import VLibras from "@/components/VLibras";
 import ColorModeProvider from "@/context/ColorModeProvider";
 
@@ -28,7 +27,6 @@ export default function RootLayout({
     return (
         <html lang="pt-BR" className={poppins.variable}>
             <body className="font-sans antialiased bg-layout-background text-layout-foreground h-screen flex flex-col overflow-hidden">
-                <HomeProvider>
                     <Header />
                     <ThemeWatcher />
                     <main className="h-full relative overflow-hidden">
@@ -41,7 +39,6 @@ export default function RootLayout({
                             </ColorModeProvider>
                         </LoadingProvider>
                     </main>
-                </HomeProvider>
             </body>
         </html>
     );
