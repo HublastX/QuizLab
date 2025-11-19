@@ -12,6 +12,17 @@ services:
     networks:
       - project_network
 
+  quizlab-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - 9081:9081
+    env_file:
+      - .env
+    volumes:
+      - ./data:/home/uv-app-user/app/data
+
 networks:
   project_network:
     external: true
