@@ -7,8 +7,8 @@ from sqlalchemy.orm import Mapped, mapped_column
 from app.core.database.database import Base
 
 
-class SubTema(Base):
-    __tablename__ = "sub_tema"
+class SubTopic(Base):
+    __tablename__ = "sub_topic"
 
     id: Mapped[str] = mapped_column(
         UUID(as_uuid=True),
@@ -17,13 +17,13 @@ class SubTema(Base):
         server_default=func.gen_random_uuid(),
     )
 
-    sub_tema: Mapped[str] = mapped_column(String(100), nullable=False)
-    descricao: Mapped[str] = mapped_column(Text, nullable=True)
-    ordem: Mapped[int] = mapped_column(Integer, nullable=False)
+    sub_topic: Mapped[str] = mapped_column(String(100), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+    order: Mapped[int] = mapped_column(Integer, nullable=False)
 
-    tema_id: Mapped[str] = mapped_column(
+    topic_id: Mapped[str] = mapped_column(
         UUID(as_uuid=True),
-        ForeignKey("temas.id"),
+        ForeignKey("topics.id"),
         nullable=False,
     )
 
