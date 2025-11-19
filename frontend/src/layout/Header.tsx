@@ -17,19 +17,19 @@ export default function Header() {
 
                 <nav className="hidden md:flex items-center space-x-6">
                     <a
-                        href="/quizzes"
+                        href="#quiz"
                         className="text-white hover:text-qorange-100 transition-colors duration-200 font-medium"
                     >
                         Quizzes
                     </a>
                     <a
-                        href="/create"
+                        href="#criar-quiz"
                         className="text-white hover:text-qorange-100 transition-colors duration-200 font-medium"
                     >
                         Criar Quiz
                     </a>
                     <a
-                        href="/ranking"
+                        href="#ranking"
                         className="text-white hover:text-qorange-100 transition-colors duration-200 font-medium"
                     >
                         Ranking

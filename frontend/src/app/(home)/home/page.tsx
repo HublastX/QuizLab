@@ -1,8 +1,12 @@
+'use client';
+
 import { CiAlarmOn, CiBasketball } from "react-icons/ci";
 import HomeCard from "./card";
 import Acessibilidade from "./acessibilidade";
+import { useAuth } from "@/hook/useAuth";
 
 export default function Home() {
+    const {user} = useAuth();
     // const cards = [
     //     {
     //         title: "Criar Quiz",
@@ -17,9 +21,9 @@ export default function Home() {
 
     return (
         <div className="flex h-full mt-6 space-x-28">
-            <div className="flex-1 h-full flex flex-col gap-10">
-                <h1 className="font-bold text-4xl">Olá, Seu Nome!</h1>
-                <div className="grid grid-cols-3 mt-3 gap-6">
+            <div className="flex-1 h-full flex flex-col gap-9">
+                <h1 className="font-bold text-4xl capitalize">Olá, {user?.name}!</h1>
+                <div className="grid grid-cols-3 mt-2 gap-6">
                     {/* {cards.map((card, index) => (
                         <HomeCard
                             key={index}
