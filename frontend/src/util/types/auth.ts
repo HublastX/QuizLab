@@ -5,8 +5,9 @@ export interface LoginCredentials {
   
 export interface AuthResponse {
     token?: string;
-    user?: any;
+    user?: string;
     message?: string;
+    access_token?: string;
   }
 
   export interface RegisterCredentials {
