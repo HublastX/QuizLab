@@ -7,8 +7,8 @@ from app.core.settings.settings import settings
 
 app = FastAPI(root_path="/quiz-lab-backend")
 
-register_routes(app)
 cors_middleware(app)
+register_routes(app)
 create_all_tables()
 
 
