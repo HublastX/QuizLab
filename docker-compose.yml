@@ -13,6 +13,7 @@ services:
       - project_network
 
   quizlab-frontend:
+    container_name: quizlab-frontend
     build:
       context: ./frontend
       dockerfile: Dockerfile
