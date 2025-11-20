@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.api.controller.sub_topic.create_sub_topic import create_sub_topic
+from app.api.controller.sub_topic.get_sub_topic import get_sub_topic_by_id, get_sub_topics_by_theme_id
 from app.api.dependencies.auth import get_current_user
 from app.core.database.database import get_db
 from app.model.user_model import User
@@ -17,4 +18,22 @@ def create_sub_topic_route(
     db: Session = Depends(get_db),
 ):
     return create_sub_topic(sub_topic, db)
+
+
+@router.get("/{sub_topic_id}", response_model=SubTopicResponseSchema)
+def get_sub_topic_by_id_route(
+    sub_topic_id: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    return get_sub_topic_by_id(sub_topic_id, current_user.id, db)
+
+
+@router.get("/theme/{theme_id}", response_model=list[SubTopicResponseSchema])
+def get_sub_topics_by_theme_route(
+    theme_id: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    return get_sub_topics_by_theme_id(theme_id, current_user.id, db)
 
