@@ -4,42 +4,78 @@ import { useState } from "react";
 import { getApiUrl } from "@/lib/api";
 
 interface QuizParams {
-    text?: string;
-    themeid?: string;
-    subtopicid?: string;
-    num_quest?: string;
-    num_alt?: string;
+    text: string;
+    theme_id: string;
+    sub_topic_id: string;
+    num_questions?: number;
+    num_alternatives?: number;
+}
+
+interface Alternativa {
+    letra: string;
+    texto: string;
+    correta: boolean;
+    explicacao: string;
+}
+
+interface Pergunta {
+    pergunta: string;
+    alternativas: Alternativa[];
+}
+
+interface QuizResponse {
+    perguntas: Pergunta[];
 }
 
 export const useQuiz = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [data, setData] = useState<QuizResponse | null>(null);
 
-    const quizText = async (params: QuizParams = {}) => {
+    const quizText = async (params: QuizParams) => {
         setLoading(true);
         setError(null);
+        setData(null);
+        
         try {
+            // Converter para application/x-www-form-urlencoded
+            const formData = new URLSearchParams();
+            formData.append('text', params.text);
+            formData.append('theme_id', params.theme_id);
+            formData.append('sub_topic_id', params.sub_topic_id);
+            
+            if (params.num_questions) {
+                formData.append('num_questions', params.num_questions.toString());
+            }
+            
+            if (params.num_alternatives) {
+                formData.append('num_alternatives', params.num_alternatives.toString());
+            }
+
             const response = await fetch(getApiUrl('/quiz/text'), {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": "application/x-www-form-urlencoded",
                     Authorization: `Bearer ${localStorage.getItem("access_token")}`,
                 },
-                body: JSON.stringify(params),
+                body: formData,
             });
             
             if (!response.ok) {
                 throw new Error("Falha ao gerar quiz");
             }
             
-            const data = await response.json();
-            return data;
+            const responseData: QuizResponse = await response.json();
+            setData(responseData);
+            return responseData;
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Erro desconhecido");
+            const errorMessage = err instanceof Error ? err.message : "Erro desconhecido";
+            setError(errorMessage);
+            throw err;
         } finally {
             setLoading(false);
         }
     };
 
-    return { quizText, loading, error };
+    return { quizText, loading, error, data };
 };
