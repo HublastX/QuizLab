@@ -35,31 +35,6 @@ export default function Home() {
                             color={card.color}
                         />
                     ))} */}
-
-                    <HomeCard
-                        title="Título 1"
-                        icon={<CiAlarmOn />}
-                        description="Descrição 1"
-                        href="#"
-                        ariaLabel="Título 1 - Descrição 1"
-                        color="create"
-                    />
-                    <HomeCard
-                        title="Título 2"
-                        icon={<CiAlarmOn />}
-                        description="Descrição 2"
-                        href="#"
-                        ariaLabel="Título 2 - Descrição 2"
-                        color="ranking"
-                    />
-                    <HomeCard
-                        title="Título 3"
-                        icon={<CiAlarmOn />}
-                        description="Descrição 3"
-                        href="#"
-                        ariaLabel="Título 3 - Descrição 3"
-                        color="play"
-                    />
                 </div>
                 <Acessibilidade />
             </div>
