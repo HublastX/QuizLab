@@ -11,6 +11,10 @@ RUN npm ci
 # Copiar código fonte
 COPY . .
 
+# Variáveis de ambiente para build
+ARG NEXT_PUBLIC_BACKEND_URL
+ENV NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL
+
 # Build de produção
 ENV NODE_ENV=production
 RUN npm run build
