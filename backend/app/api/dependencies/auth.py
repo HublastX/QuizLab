@@ -36,13 +36,11 @@ def get_current_user(
     if subject is None:
         raise credentials_exception
 
-    try:
-        user_id = int(subject)
-    except (TypeError, ValueError) as exc:
-        raise credentials_exception from exc
+    if not isinstance(subject, str):
+        raise credentials_exception
 
     repository = UserRepository(db)
-    user = repository.get_user_by_id(user_id)
+    user = repository.get_user_by_id(subject)
     if user is None:
         raise credentials_exception
 

@@ -2,25 +2,25 @@ from fastapi import HTTPException, UploadFile, status
 from sqlalchemy.orm import Session
 
 from app.schemas.quiz_schemas import CreateQuizDocSchema, QuizResponseSchema
-from app.services.extract.extract_pdf import extract_text_from_document
+from app.services.extract.extract_audio import extract_text_from_audio
 from app.services.llm.agente_quiz import QuizAgent
 from app.repository.quiz_repository import QuizRepository
 
 
-async def create_quiz_doc(document: UploadFile, data: CreateQuizDocSchema, db: Session) -> QuizResponseSchema:
+async def create_quiz_audio(audio: UploadFile, data: CreateQuizDocSchema, db: Session) -> QuizResponseSchema:
     try:
-        content = await document.read()
+        content = await audio.read()
         
-        extracted_text = extract_text_from_document(
+        extracted_text = extract_text_from_audio(
             data=content,
-            mime_type=document.content_type,
-            filename=document.filename
+            mime_type=audio.content_type,
+            filename=audio.filename
         )
         
         if not extracted_text:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Could not extract text from document"
+                detail="Could not extract text from audio"
             )
         
         agent = QuizAgent(text=extracted_text)
@@ -46,5 +46,6 @@ async def create_quiz_doc(document: UploadFile, data: CreateQuizDocSchema, db: S
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error creating quiz: {str(e)}"
+            detail=f"Error creating quiz from audio: {str(e)}"
         )
+
