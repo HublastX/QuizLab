@@ -11,15 +11,19 @@ class UserRepository:
         """
         Create a new user in the database
         """
-        new_user = User(name=user.name, email=user.email, password=user.password)
-        self.db.add(new_user)
-        self.db.commit()
-        self.db.refresh(new_user)
-        return new_user
+        try:
+            new_user = User(name=user.name, email=user.email, password=user.password)
+            self.db.add(new_user)
+            self.db.commit()
+            self.db.refresh(new_user)
+            return new_user
+        except Exception:
+            self.db.rollback()
+            raise
 
 
       
-    def get_user_by_id(self, user_id: int) -> User:
+    def get_user_by_id(self, user_id: str) -> User:
         return self.db.query(User).filter(User.id == user_id).first()
     
     def get_user_by_email(self, email: str) -> User:
