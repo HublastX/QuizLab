@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  basePath: '/quiz-lab',
+  assetPrefix: '/quiz-lab',
 };
 
 export default nextConfig;
