@@ -1,11 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-    content: [
-        "./src/**/*.{html,js,ts,jsx,tsx}",
-        "./components/**/*.{js,ts,jsx,tsx}",
-        "./pages/**/*.{js,ts,jsx,tsx}",
-        "./layouts/**/*.{js,ts,jsx,tsx}",
-    ],
+   content: ["./app/**/*.{js,ts,jsx,tsx}"],
     theme: {
         extend: {
             colors: {
@@ -23,6 +18,7 @@ module.exports = {
                     700: "#9a3412",
                     800: "#7c2d12",
                     900: "#431407",
+                    950: "#471405",
                 },
                 qblue: {
                     default: "#3b82f6",
