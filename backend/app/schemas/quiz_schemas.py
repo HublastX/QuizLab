@@ -3,11 +3,15 @@ from pydantic import BaseModel, ConfigDict, Field
 
 class CreateQuizSchema(BaseModel):
     text: str = Field(..., description="Base text to create the quiz")
+    theme_id: str = Field(..., description="Theme ID")
+    sub_topic_id: str = Field(..., description="Sub topic ID")
     num_questions: int = Field(default=5, ge=1, le=20, description="Number of questions to create")
     num_alternatives: int = Field(default=4, ge=2, le=6, description="Number of alternatives per question")
 
 
 class CreateQuizDocSchema(BaseModel):
+    theme_id: str = Field(..., description="Theme ID")
+    sub_topic_id: str = Field(..., description="Sub topic ID")
     num_questions: int = Field(default=5, ge=1, le=20, description="Number of questions to create")
     num_alternatives: int = Field(default=4, ge=2, le=6, description="Number of alternatives per question")
 
