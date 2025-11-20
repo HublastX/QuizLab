@@ -38,7 +38,6 @@ export const useQuiz = () => {
         setData(null);
         
         try {
-            // Converter para application/x-www-form-urlencoded
             const formData = new URLSearchParams();
             formData.append('text', params.text);
             formData.append('theme_id', params.theme_id);
