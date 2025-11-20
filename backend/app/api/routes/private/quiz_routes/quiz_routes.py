@@ -6,6 +6,8 @@ from app.api.controller.quiz.create_quiz_doc  import create_quiz_doc
 from app.api.controller.quiz.create_quiz_audio import create_quiz_audio
 from app.core.database.database import get_db
 from app.schemas.quiz_schemas import CreateQuizDocSchema, CreateQuizSchema, QuizResponseSchema
+from app.api.dependencies.auth import get_current_user
+from app.model.user_model import User
 
 router = APIRouter()
 
@@ -18,7 +20,7 @@ def create_quiz_route(
     num_questions: int = Form(default=5),
     num_alternatives: int = Form(default=4),
     db: Session = Depends(get_db),
-    #current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     data = CreateQuizSchema(
         text=text,
@@ -38,7 +40,7 @@ async def create_quiz_doc_route(
     num_questions: int = Form(default=5),
     num_alternatives: int = Form(default=4),
     db: Session = Depends(get_db),
-    #current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     data = CreateQuizDocSchema(
         theme_id=theme_id,
@@ -57,7 +59,7 @@ async def create_quiz_audio_route(
     num_questions: int = Form(default=5),
     num_alternatives: int = Form(default=4),
     db: Session = Depends(get_db),
-    #current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user)
 ):
     data = CreateQuizDocSchema(
         theme_id=theme_id,
