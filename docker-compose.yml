@@ -1,4 +1,16 @@
 services:
+
+  quizlab-db:
+    image: postgres:17
+    ports:
+      - 5422:5432
+    env_file:
+      - .env
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    networks:
+      - project_network
+
   quizlab:
     build:
       context: ./backend
@@ -9,6 +21,8 @@ services:
       - .env
     volumes:
       - ./data:/home/uv-app-user/app/data
+    depends_on:
+      - quizlab-db
     networks:
       - project_network
 
