@@ -1,10 +1,10 @@
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
-    DATABASE_URL: str = "sqlite:///./data/quizlab.db"
+    DATABASE_URL: str = ""
     secret_key: str = "secret"
     algorithm: str = "HS256"
-    access_token_expire_minutes: int = 60
+    access_token_expire_minutes: int = 86400
     llm_api_key: str = ""
     PORT: int = 9080
 

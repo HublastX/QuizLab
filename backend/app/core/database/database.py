@@ -14,9 +14,7 @@ logger = get_logger(__name__)
 
 SQLALCHEMY_DATABASE_URL = settings.DATABASE_URL
 
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
@@ -43,13 +41,16 @@ def _clear_alembic_version():
     """Limpa tabela alembic_version se ela existir."""
     try:
         with engine.connect() as connection:
-            # SQLite syntax
+            # PostgreSQL syntax
             result = connection.execute(
                 text("""
-                SELECT name FROM sqlite_master 
-                WHERE type='table' AND name='alembic_version'
+                SELECT EXISTS (
+                    SELECT FROM information_schema.tables 
+                    WHERE table_schema = 'public' 
+                    AND table_name = 'alembic_version'
+                )
                 """)
-            ).fetchone()
+            ).scalar()
 
             if result:
                 connection.execute(text("DELETE FROM alembic_version"))
