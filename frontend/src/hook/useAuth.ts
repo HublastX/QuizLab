@@ -8,6 +8,7 @@ import {
     RegisterResponse,
 } from "./../util/types/auth";
 import { User } from "@/util/types/user";
+import { getApiUrl } from "@/lib/api";
 
 export const useAuth = () => {
     const [loading, setLoading] = useState(false);
@@ -22,7 +23,7 @@ export const useAuth = () => {
         setError(null);
         try {
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`,
+                getApiUrl('/auth/login'),
                 {
                     method: "POST",
                     headers: {
@@ -59,7 +60,7 @@ export const useAuth = () => {
         setError(null);
         try {
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/create`,
+                getApiUrl('/auth/create'),
                 {
                     method: "POST",
                     headers: {
@@ -95,7 +96,7 @@ export const useAuth = () => {
         setError(null);
         try {
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_BACKEND_URL}/users/me`,
+                getApiUrl('/users/me'),
                 {
                     method: "GET",
                     headers: {
