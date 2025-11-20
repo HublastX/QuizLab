@@ -4,7 +4,6 @@ import { CiAlarmOn, CiBasketball } from "react-icons/ci";
 import HomeCard from "./card";
 import Acessibilidade from "./acessibilidade";
 import { useAuth } from "@/hook/useAuth";
-import ThemeList from "./themeList";
 
 export default function Home() {
     const { user } = useAuth();
@@ -42,7 +41,6 @@ export default function Home() {
                 <Acessibilidade />
             </div>
 
-            <ThemeList />
         </div>
     );
 }
