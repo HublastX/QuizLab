@@ -1,12 +1,13 @@
-'use client';
+"use client";
 
 import { CiAlarmOn, CiBasketball } from "react-icons/ci";
 import HomeCard from "./card";
 import Acessibilidade from "./acessibilidade";
 import { useAuth } from "@/hook/useAuth";
+import ThemeList from "./themeList";
 
 export default function Home() {
-    const {user} = useAuth();
+    const { user } = useAuth();
     // const cards = [
     //     {
     //         title: "Criar Quiz",
@@ -22,7 +23,9 @@ export default function Home() {
     return (
         <div className="flex h-full mt-6 space-x-28">
             <div className="flex-1 h-full flex flex-col gap-9">
-                <h1 className="font-bold text-4xl capitalize">Olá, {user?.name}!</h1>
+                <h1 className="font-bold text-4xl capitalize">
+                    Olá, {user?.name}!
+                </h1>
                 <div className="grid grid-cols-3 mt-2 gap-6">
                     {/* {cards.map((card, index) => (
                         <HomeCard
@@ -38,76 +41,8 @@ export default function Home() {
                 </div>
                 <Acessibilidade />
             </div>
-            <div className="">
-                <div className="grid grid-cols-1 gap-6">
-                    <h2 className="text-2xl font-black">Temas</h2>
-                    <div className="grid grid-cols-3 gap-6 overflow-auto">
-                        <HomeCard
-                            title="pitagoras"
-                            icon={<CiBasketball />}
-                            description="Descrição 3"
-                            href="#"
-                            ariaLabel="Título 3 - Descrição 3"
-                            color="play"
-                            variant="theme"
-                        />
-                        <HomeCard
-                            title="playstation"
-                            icon={<CiBasketball />}
-                            description="Descrição 3"
-                            href="#"
-                            ariaLabel="Título 3 - Descrição 3"
-                            color="play"
-                            variant="theme"
-                        />
-                        <HomeCard
-                            title="Arvore"
-                            icon={<CiBasketball />}
-                            description="Descrição 3"
-                            href="#"
-                            ariaLabel="Título 3 - Descrição 3"
-                            color="play"
-                            variant="theme"
-                        />
-                        <HomeCard
-                            title="luva de pedreiro"
-                            icon={<CiBasketball />}
-                            description="Descrição 3"
-                            href="#"
-                            ariaLabel="Título 3 - Descrição 3"
-                            color="play"
-                            variant="theme"
-                        />
-                        <HomeCard
-                            title="luva de pedreiro"
-                            icon={<CiBasketball />}
-                            description="Descrição 3"
-                            href="#"
-                            ariaLabel="Título 3 - Descrição 3"
-                            color="play"
-                            variant="theme"
-                        />
-                        <HomeCard
-                            title="luva de pedreiro"
-                            icon={<CiBasketball />}
-                            description="Descrição 3"
-                            href="#"
-                            ariaLabel="Título 3 - Descrição 3"
-                            color="play"
-                            variant="theme"
-                        />
-                        <HomeCard
-                            title="luva de pedreiro"
-                            icon={<CiBasketball />}
-                            description="Descrição 3"
-                            href="#"
-                            ariaLabel="Título 3 - Descrição 3"
-                            color="play"
-                            variant="theme"
-                        />
-                    </div>
-                </div>
-            </div>
+
+            <ThemeList />
         </div>
     );
 }

@@ -1,31 +1,68 @@
 "use client";
 
 import { useTopics } from "@/hook/useTopics";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function SubTopicPageTest() {
-  const { subTopics, loading, error } = useTopics();
+  const { postSubTopic, getSubTopicById, getSubTopicsByThemeId, loading, error } = useTopics();
   const [subTopicData, setSubTopicData] = useState({
     sub_topic: "",
     description: "",
-    theme_id: "12345"
+    theme_id: ""
   });
+  const [subTopicId, setSubTopicId] = useState("");
+  const [themeIdForSearch, setThemeIdForSearch] = useState("");
   const [createdSubTopic, setCreatedSubTopic] = useState<any>(null);
+  const [specificSubTopic, setSpecificSubTopic] = useState<any>(null);
+  const [subTopicsByTheme, setSubTopicsByTheme] = useState<any[]>([]);
 
+  // Criar novo subtópico
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!subTopicData.sub_topic.trim() || !subTopicData.description.trim()) {
+    if (!subTopicData.sub_topic.trim() || !subTopicData.description.trim() || !subTopicData.theme_id.trim()) {
       alert("Preencha todos os campos");
       return;
     }
 
     try {
-      const result = await subTopics(subTopicData);
+      const result = await postSubTopic(subTopicData);
       setCreatedSubTopic(result);
-      setSubTopicData(prev => ({ ...prev, sub_topic: "", description: "" })); // Limpa apenas subtópico e descrição
+      setSubTopicData({ sub_topic: "", description: "", theme_id: "" });
     } catch (err) {
       console.error("Erro ao criar subtópico:", err);
+    }
+  };
+
+  // Buscar subtópico por ID
+  const handleGetSubTopicById = async () => {
+    if (!subTopicId.trim()) {
+      alert("Digite um ID de subtópico");
+      return;
+    }
+
+    try {
+      const result = await getSubTopicById(subTopicId);
+      setSpecificSubTopic(result);
+    } catch (err) {
+      console.error("Erro ao buscar subtópico:", err);
+      setSpecificSubTopic(null);
+    }
+  };
+
+  // Buscar subtópicos por theme_id
+  const handleGetSubTopicsByTheme = async () => {
+    if (!themeIdForSearch.trim()) {
+      alert("Digite um ID de tema");
+      return;
+    }
+
+    try {
+      const result = await getSubTopicsByThemeId(themeIdForSearch);
+      setSubTopicsByTheme(result);
+    } catch (err) {
+      console.error("Erro ao buscar subtópicos do tema:", err);
+      setSubTopicsByTheme([]);
     }
   };
 
@@ -37,66 +74,160 @@ export default function SubTopicPageTest() {
     }));
   };
 
+  const handleSubTopicIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSubTopicId(e.target.value);
+  };
+
+  const handleThemeIdForSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setThemeIdForSearch(e.target.value);
+  };
+
   return (
-    <div>      
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div>
+      <h1>Gerenciamento de Subtópicos</h1>
+      
+      {/* Seção: Criar Novo Subtópico */}
+      <section>
+        <h2>Criar Novo Subtópico</h2>
+        
+        <form onSubmit={handleSubmit}>
+          <div>
+            <input
+              type="text"
+              id="sub_topic"
+              name="sub_topic"
+              value={subTopicData.sub_topic}
+              onChange={handleChange}
+              placeholder="Digite o subtópico"
+              disabled={loading}
+            />
+          </div>
 
+          <div>
+            <textarea
+              id="description"
+              name="description"
+              value={subTopicData.description}
+              onChange={handleChange}
+              rows={4}
+              placeholder="Digite a descrição do subtópico"
+              disabled={loading}
+            />
+          </div>
+
+          <div>
+            <input
+              type="text"
+              id="theme_id"
+              name="theme_id"
+              value={subTopicData.theme_id}
+              onChange={handleChange}
+              placeholder="Digite o ID do tema"
+              disabled={loading}
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? "Criando..." : "Criar Subtópico"}
+          </button>
+        </form>
+      </section>
+
+      {/* Seção: Buscar Subtópico por ID */}
+      <section>
+        <h2>Buscar Subtópico por ID</h2>
+        
+        <div>
           <input
             type="text"
-            id="sub_topic"
-            name="sub_topic"
-            value={subTopicData.sub_topic}
-            onChange={handleChange}
-            placeholder="Digite o subtópico"
+            value={subTopicId}
+            onChange={handleSubTopicIdChange}
+            placeholder="Digite o ID do subtópico"
             disabled={loading}
           />
-
-          <textarea
-            id="description"
-            name="description"
-            value={subTopicData.description}
-            onChange={handleChange}
-            rows={4}
-            placeholder="Digite a descrição do subtópico"
+          <button
+            onClick={handleGetSubTopicById}
             disabled={loading}
-          />
+          >
+            {loading ? "Buscando..." : "Buscar Subtópico"}
+          </button>
+        </div>
 
+        {specificSubTopic && (
+          <div>
+            <h3>Subtópico Encontrado:</h3>
+            <div>
+              <p><strong>ID:</strong> {specificSubTopic.id}</p>
+              <p><strong>Subtopico:</strong> {specificSubTopic.sub_topic}</p>
+              <p><strong>Descrição:</strong> {specificSubTopic.description}</p>
+              <p><strong>Theme ID:</strong> {specificSubTopic.theme_id}</p>
+              <p><strong>Criado em:</strong> {new Date(specificSubTopic.created_at).toLocaleString()}</p>
+            </div>
+          </div>
+        )}
+      </section>
 
+      {/* Seção: Buscar Subtópicos por Theme ID */}
+      <section>
+        <h2>Buscar Subtópicos por Theme ID</h2>
+        
+        <div>
           <input
             type="text"
-            id="theme_id"
-            name="theme_id"
-            value={subTopicData.theme_id}
-            onChange={handleChange}
+            value={themeIdForSearch}
+            onChange={handleThemeIdForSearchChange}
             placeholder="Digite o ID do tema"
             disabled={loading}
           />
-
-
-        <button
-          type="submit"
-          disabled={loading}
-        >
-          {loading ? "Criando..." : "Criar Subtópico"}
-        </button>
-      </form>
-
-      {error && (
-        <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">
-          Erro: {error}
+          <button
+            onClick={handleGetSubTopicsByTheme}
+            disabled={loading}
+          >
+            {loading ? "Buscando..." : "Buscar Subtópicos"}
+          </button>
         </div>
-      )}
 
+        {subTopicsByTheme.length > 0 ? (
+          <div>
+            <h3>Subtopicos do Tema {themeIdForSearch}:</h3>
+            {subTopicsByTheme.map((subTopic) => (
+              <div key={subTopic.id}>
+                <p><strong>ID:</strong> {subTopic.id}</p>
+                <p><strong>Subtopico:</strong> {subTopic.sub_topic}</p>
+                <p><strong>Descrição:</strong> {subTopic.description}</p>
+                <p><strong>Theme ID:</strong> {subTopic.theme_id}</p>
+                <p><strong>Criado em:</strong> {new Date(subTopic.created_at).toLocaleString()}</p>
+                <hr />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>Nenhum subtópico encontrado para este tema</p>
+        )}
+      </section>
+
+      {/* Seção: Subtópico Criado com Sucesso */}
       {createdSubTopic && (
-        <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-md">
-          <h3 className="text-lg font-semibold text-green-800 mb-2">Subtópico criado com sucesso!</h3>
-          <div className="space-y-2 text-sm text-gray-700">
+        <section>
+          <h2>Subtopico criado com sucesso!</h2>
+          <div>
             <p><strong>ID:</strong> {createdSubTopic.id}</p>
             <p><strong>Subtopico:</strong> {createdSubTopic.sub_topic}</p>
             <p><strong>Descrição:</strong> {createdSubTopic.description}</p>
             <p><strong>Theme ID:</strong> {createdSubTopic.theme_id}</p>
             <p><strong>Criado em:</strong> {new Date(createdSubTopic.created_at).toLocaleString()}</p>
           </div>
+        </section>
+      )}
+
+      {/* Seção: Erro */}
+      {error && (
+        <div>
+          <h2>Erro</h2>
+          <p>Erro: {error}</p>
         </div>
       )}
     </div>
