@@ -42,7 +42,69 @@ export default function Home() {
                 <div className="grid grid-cols-1 gap-6">
                     <h2 className="text-2xl font-black">Temas</h2>
                     <div className="grid grid-cols-3 gap-6 overflow-auto">
-
+                        <HomeCard
+                            title="pitagoras"
+                            icon={<CiBasketball />}
+                            description="Descrição 3"
+                            href="#"
+                            ariaLabel="Título 3 - Descrição 3"
+                            color="play"
+                            variant="theme"
+                        />
+                        <HomeCard
+                            title="playstation"
+                            icon={<CiBasketball />}
+                            description="Descrição 3"
+                            href="#"
+                            ariaLabel="Título 3 - Descrição 3"
+                            color="play"
+                            variant="theme"
+                        />
+                        <HomeCard
+                            title="Arvore"
+                            icon={<CiBasketball />}
+                            description="Descrição 3"
+                            href="#"
+                            ariaLabel="Título 3 - Descrição 3"
+                            color="play"
+                            variant="theme"
+                        />
+                        <HomeCard
+                            title="luva de pedreiro"
+                            icon={<CiBasketball />}
+                            description="Descrição 3"
+                            href="#"
+                            ariaLabel="Título 3 - Descrição 3"
+                            color="play"
+                            variant="theme"
+                        />
+                        <HomeCard
+                            title="luva de pedreiro"
+                            icon={<CiBasketball />}
+                            description="Descrição 3"
+                            href="#"
+                            ariaLabel="Título 3 - Descrição 3"
+                            color="play"
+                            variant="theme"
+                        />
+                        <HomeCard
+                            title="luva de pedreiro"
+                            icon={<CiBasketball />}
+                            description="Descrição 3"
+                            href="#"
+                            ariaLabel="Título 3 - Descrição 3"
+                            color="play"
+                            variant="theme"
+                        />
+                        <HomeCard
+                            title="luva de pedreiro"
+                            icon={<CiBasketball />}
+                            description="Descrição 3"
+                            href="#"
+                            ariaLabel="Título 3 - Descrição 3"
+                            color="play"
+                            variant="theme"
+                        />
                     </div>
                 </div>
             </div>
