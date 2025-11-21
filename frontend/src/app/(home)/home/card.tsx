@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+import { CiAlarmOn } from "react-icons/ci";
 
 export default function HomeCard({
     title,
@@ -15,7 +16,7 @@ export default function HomeCard({
     description?: string;
     href: string;
     ariaLabel?: string;
-    color?: "create" | "ranking" | "play";
+    color?: string;
     variant?: "defaut" | "theme";
 }) {
     const label =

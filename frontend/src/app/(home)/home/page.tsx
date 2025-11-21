@@ -5,20 +5,21 @@ import HomeCard from "./card";
 import Acessibilidade from "./acessibilidade";
 import { useAuth } from "@/hook/useAuth";
 import ThemeList from "./themeList";
+import homecard from "./cards.json";
 
 export default function Home() {
     const { user } = useAuth();
-    // const cards = [
-    //     {
-    //         title: "Criar Quiz",
-    //         icon: <CiAlarmOn />,
-    //         description: "Crie seus próprios quizzes personalizados.",
-    //         href: "/create",
-    //         ariaLabel: "Criar Quiz - Crie seus próprios quizzes personalizados.",
-    //         color: "create",
-    //     },
 
-    // ];
+    const homeCards = homecard.cards.map((card, index) => (
+                        <HomeCard
+                            key={index}
+                            title={card.title}
+                            icon={<div dangerouslySetInnerHTML= {{__html: card.icon}} />}
+                            description={card.description}
+                            href={card.href}
+                            ariaLabel={card.ariaLabel}
+                            color = {card.color}
+                        />))
 
     return (
         <div className="flex h-full mt-6 space-x-28">
@@ -27,22 +28,19 @@ export default function Home() {
                     Olá, {user?.name}!
                 </h1>
                 <div className="grid grid-cols-3 mt-2 gap-6">
-                    {/* {cards.map((card, index) => (
-                        <HomeCard
-                            key={index}
-                            title={card.title}
-                            icon={card.icon}
-                            description={card.description}
-                            href={card.href}
-                            ariaLabel={card.ariaLabel}
-                            color={card.color}
-                        />
-                    ))} */}
+                    <HomeCard
+                            title="titulo"
+                            icon= {<CiAlarmOn/>}
+                            description="descrição"
+                            href="#"
+                            color = "create"
+                    />
+                    {homeCards}
                 </div>
                 <Acessibilidade />
             </div>
 
-            <ThemeList />
+            {/* <ThemeList /> */}
         </div>
     );
 }
