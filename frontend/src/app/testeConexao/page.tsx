@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/hook/useAuth";
+import { useAuth } from "@/app/hook/useAuth";
 import { useState } from "react";
 
 export default function TesteConexao() {
@@ -13,7 +13,7 @@ export default function TesteConexao() {
             password: "testeSenha",
             email: "teste@email.com",
         });
-        
+
         if (response) {
             setResultado("Conexão bem sucedida - Registro!");
         } else {
@@ -44,7 +44,9 @@ export default function TesteConexao() {
                         className="bg-qblue-400"
                         disabled={loading}
                     >
-                        {loading ? "Carregando..." : "Testar Conexão - Registro"}
+                        {loading
+                            ? "Carregando..."
+                            : "Testar Conexão - Registro"}
                     </Button>
                 </div>
                 <div>
@@ -54,7 +56,9 @@ export default function TesteConexao() {
                             className="bg-qorange-400"
                             disabled={loading}
                         >
-                            {loading ? "Carregando..." : "Testar Conexão - Login"}
+                            {loading
+                                ? "Carregando..."
+                                : "Testar Conexão - Login"}
                         </Button>
                     </div>
                 </div>

@@ -1,53 +1,66 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import {
     LoginCredentials,
-    AuthResponse,
     RegisterCredentials,
+    AuthResponse,
     RegisterResponse,
-} from "./../util/types/auth";
-import { User } from "@/util/types/user";
-import { getApiUrl } from "@/lib/api";
+    UseAuthReturn,
+} from "@/util/types/auth";
 
-export const useAuth = () => {
-    const [loading, setLoading] = useState(false);
+export const useAuth = (): UseAuthReturn => {
+    const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
-    const [user, setUser] = useState<User | null>(null);
-    const router = useRouter();
+
+    const fetchWithoutAuth = async (url: string, options: RequestInit = {}) => {
+        const config: RequestInit = {
+            ...options,
+            headers: {
+                "Content-Type": "application/json",
+                ...options.headers,
+            },
+        };
+
+        const response = await fetch(url, config);
+
+        if (!response.ok) {
+            const errorData = await response
+                .json()
+                .catch(() => ({ error: "Erro na requisição" }));
+            throw new Error(
+                errorData.error ||
+                    `Erro ${response.status}: ${response.statusText}`
+            );
+        }
+
+        return response;
+    };
 
     const login = async (
         credentials: LoginCredentials
-    ): Promise<AuthResponse | null> => {
+    ): Promise<AuthResponse> => {
         setLoading(true);
         setError(null);
-        try {
-            const response = await fetch(
-                getApiUrl('/auth/login'),
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(credentials),
-                }
-            );
-            if (!response.ok) {
-                throw new Error("Falha na autenticação");
-            }
-            const data: AuthResponse = await response.json();
 
-            if (data.access_token) {
-                localStorage.setItem("access_token", data.access_token);
-            }
-            if (response.ok) {
-                router.push("/home");
+        try {
+            const response = await fetchWithoutAuth("/api/auth/login", {
+                method: "POST",
+                body: JSON.stringify(credentials),
+            });
+
+            const data = await response.json();
+
+            if (data.access_token || data.token) {
+                const token = data.access_token || data.token;
+                localStorage.setItem("access_token", token);
             }
 
             return data;
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Erro desconhecido");
-            return null;
+            const errorMessage =
+                err instanceof Error ? err.message : "Erro ao fazer login";
+            setError(errorMessage);
+            throw err;
         } finally {
             setLoading(false);
         }
@@ -55,98 +68,38 @@ export const useAuth = () => {
 
     const register = async (
         credentials: RegisterCredentials
-    ): Promise<RegisterResponse | null> => {
+    ): Promise<RegisterResponse> => {
         setLoading(true);
         setError(null);
+
         try {
-            const response = await fetch(
-                getApiUrl('/auth/create'),
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(credentials),
-                }
-            );
-            if (!response.ok) {
-                throw new Error("Falha no registro");
-            }
-            const data: RegisterResponse = await response.json();
+            const response = await fetchWithoutAuth("/api/auth/registro", {
+                method: "POST",
+                body: JSON.stringify(credentials),
+            });
 
-            router.push("/login");
-
-            return data;
-        } catch (err) {
-            setError(err instanceof Error ? err.message : "Erro desconhecido");
-            return null;
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const logout = () => {
-        localStorage.removeItem("access_token");
-        localStorage.removeItem("token_type");
-        router.push("/login");
-    };
-
-    const me = async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            const response = await fetch(
-                getApiUrl('/users/me'),
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${localStorage.getItem(
-                            "access_token"
-                        )}`,
-                    },
-                }
-            );
-            if (!response.ok) {
-                throw new Error("Falha ao buscar dados do usuário");
-            }
             const data = await response.json();
+
             return data;
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Erro desconhecido");
-            return null;
+            const errorMessage =
+                err instanceof Error ? err.message : "Erro ao fazer registro";
+            setError(errorMessage);
+            throw err;
         } finally {
             setLoading(false);
         }
     };
 
-    useEffect(() => {
-        const fetchUser = async () => {
-            const userData = await me();
-            if (userData) {
-                setUser(userData);
-            }
-        };
-        fetchUser();
-    }, []);
-
-    const getToken = (): string | null => {
-        return localStorage.getItem("access_token");
-    };
-
-    const isAuthenticated = (): boolean => {
-        return !!localStorage.getItem("access_token");
+    const clearError = (): void => {
+        setError(null);
     };
 
     return {
-        login,
-        register,
-        logout,
-        me,
-        user,
-        getToken,
-        isAuthenticated,
         loading,
         error,
+        login,
+        register,
+        clearError,
     };
 };

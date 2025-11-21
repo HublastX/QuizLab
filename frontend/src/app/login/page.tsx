@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/hook/useAuth";
+import { useAuth } from "@/app/hook/useAuth";
 import { Button } from "@/components/ui/button";
 
 export default function Login() {
@@ -46,7 +46,11 @@ export default function Login() {
                         required
                     />
                 </div>
-                <Button type="submit" disabled={loading} className="mt-4 hover:animate-ping">
+                <Button
+                    type="submit"
+                    disabled={loading}
+                    className="mt-4 hover:animate-ping"
+                >
                     {loading ? "Entrando..." : "Entrar"}
                 </Button>
             </form>

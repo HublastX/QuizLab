@@ -23,3 +23,11 @@ export interface RegisterResponse {
   created_at: string;
   updated_at: string;
 }
+
+export interface UseAuthReturn {
+    loading: boolean;
+    error: string | null;
+    login: (credentials: LoginCredentials) => Promise<AuthResponse>;
+    register: (credentials: RegisterCredentials) => Promise<RegisterResponse>;
+    clearError: () => void;
+}

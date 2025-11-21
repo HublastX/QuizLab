@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/hook/useAuth";
+import { useAuth } from "@/app/hook/useAuth";
 
 export default function Registro() {
     const { register, loading, error } = useAuth();
@@ -13,7 +13,7 @@ export default function Registro() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const response = await register({ name, email, password });
-        
+
         if (response) {
             console.log("Registro successful:", response);
         }
@@ -24,10 +24,13 @@ export default function Registro() {
             {loading && <p>Carregando...</p>}
             {error && <p className="text-red-500">Erro: {error}</p>}
             <h1 className="text-6xl font-black">Registro bem legal</h1>
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 mt-5 w-1/2 bg-layout-card">
+            <form
+                onSubmit={handleSubmit}
+                className="grid grid-cols-1 gap-4 mt-5 w-1/2 bg-layout-card"
+            >
                 <div className="grid grid-cols-1 gap-2">
                     <label>Nome</label>
-                    <Input 
+                    <Input
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
@@ -36,7 +39,7 @@ export default function Registro() {
                 </div>
                 <div className="grid grid-cols-1 gap-2">
                     <label>Email</label>
-                    <Input 
+                    <Input
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
@@ -45,15 +48,15 @@ export default function Registro() {
                 </div>
                 <div className="grid grid-cols-1 gap-2">
                     <label>Senha</label>
-                    <Input 
+                    <Input
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
                 </div>
-                <button 
-                    type="submit" 
+                <button
+                    type="submit"
                     disabled={loading}
                     className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 disabled:opacity-50"
                 >

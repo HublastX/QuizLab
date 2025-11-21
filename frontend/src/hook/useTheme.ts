@@ -1,116 +1,197 @@
 "use client";
+import { CreateThemeData, Theme, UseThemeReturn } from "@/util/types/theme";
+import { useState, useEffect } from "react";
 
-import { useState } from "react";
-import { getApiUrl } from "@/lib/api";
+export const useTheme = (): UseThemeReturn => {
+    const [themes, setThemes] = useState<Theme[]>([]);
+    const [currentTheme, setCurrentTheme] = useState<Theme | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
 
-interface ThemeRequest {
-  title: string;
-  description: string;
-}
+    const getAccessToken = (): string => {
+        if (typeof window !== "undefined") {
+            return localStorage.getItem("accessToken") || "";
+        }
+        return "";
+    };
 
-interface ThemeResponse {
-  id: string;
-  title: string;
-  description: string;
-  user_id: string;
-  created_at: string;
-  updated_at: string;
-}
+    const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
+        const token = getAccessToken();
 
-export const useTheme = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+        if (!token) {
+            throw new Error("Token de acesso não encontrado");
+        }
 
-  const postTheme = async (themeData: ThemeRequest): Promise<ThemeResponse> => {
-    setLoading(true);
-    setError(null);
-    
-    try {
-      const response = await fetch(getApiUrl('/themes'), {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-        body: JSON.stringify(themeData),
-      });
-      
-      if (!response.ok) {
-        throw new Error("Falha ao criar tema");
-      }
-      
-      const data: ThemeResponse = await response.json();
-      return data;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Erro desconhecido";
-      setError(errorMessage);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
+        const config: RequestInit = {
+            ...options,
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+                ...options.headers,
+            },
+        };
 
-  const getThemes = async (): Promise<ThemeResponse[]> => {
-    setLoading(true);
-    setError(null);
-    
-    try {
-      const response = await fetch(getApiUrl('/themes'), {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      });
-      
-      if (!response.ok) {
-        throw new Error("Falha ao buscar temas");
-      }
-      
-      const data: ThemeResponse[] = await response.json();
-      return data;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Erro desconhecido";
-      setError(errorMessage);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
+        const response = await fetch(url, config);
 
-  const getThemeById = async (themeId: string): Promise<ThemeResponse> => {
-    setLoading(true);
-    setError(null);
-    
-    try {
-      const response = await fetch(getApiUrl(`/themes/${themeId}`), {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      });
-      
-      if (!response.ok) {
-        throw new Error("Falha ao buscar tema");
-      }
-      
-      const data: ThemeResponse = await response.json();
-      return data;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Erro desconhecido";
-      setError(errorMessage);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
+        if (!response.ok) {
+            const errorData = await response
+                .json()
+                .catch(() => ({ error: "Erro na requisição" }));
+            throw new Error(
+                errorData.error ||
+                    `Erro ${response.status}: ${response.statusText}`
+            );
+        }
 
-  return { 
-    postTheme, 
-    getThemes, 
-    getThemeById, 
-    loading, 
-    error 
-  };
+        return response;
+    };
+
+    const fetchThemes = async (): Promise<void> => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const response = await fetchWithAuth("/api/theme");
+            const data = await response.json();
+            setThemes(data);
+        } catch (err) {
+            const errorMessage =
+                err instanceof Error ? err.message : "Erro ao buscar temas";
+            setError(errorMessage);
+            setThemes([]);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const fetchThemeById = async (id: string): Promise<void> => {
+        if (!id) {
+            setError("ID do tema não fornecido");
+            return;
+        }
+
+        setLoading(true);
+        setError(null);
+
+        try {
+            const response = await fetchWithAuth(`/api/theme/${id}`);
+            const data = await response.json();
+            setCurrentTheme(data);
+        } catch (err) {
+            const errorMessage =
+                err instanceof Error ? err.message : "Erro ao buscar tema";
+            setError(errorMessage);
+            setCurrentTheme(null);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const createTheme = async (themeData: CreateThemeData): Promise<Theme> => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const response = await fetchWithAuth("/api/theme", {
+                method: "POST",
+                body: JSON.stringify(themeData),
+            });
+
+            const newTheme = await response.json();
+
+            setThemes((prev) => [...prev, newTheme]);
+            setCurrentTheme(newTheme);
+
+            return newTheme;
+        } catch (err) {
+            const errorMessage =
+                err instanceof Error ? err.message : "Erro ao criar tema";
+            setError(errorMessage);
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const clearError = (): void => {
+        setError(null);
+    };
+
+    const clearCurrentTheme = (): void => {
+        setCurrentTheme(null);
+    };
+
+    return {
+        themes,
+        currentTheme,
+        loading,
+        error,
+
+        fetchThemes,
+        fetchThemeById,
+        createTheme,
+        clearError,
+        clearCurrentTheme,
+    };
+};
+
+export const useThemeById = (themeId?: string) => {
+    const [theme, setTheme] = useState<Theme | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const getAccessToken = (): string => {
+        if (typeof window !== "undefined") {
+            return localStorage.getItem("accessToken") || "";
+        }
+        return "";
+    };
+
+    useEffect(() => {
+        if (!themeId) return;
+
+        const fetchTheme = async () => {
+            setLoading(true);
+            setError(null);
+
+            try {
+                const token = getAccessToken();
+
+                if (!token) {
+                    throw new Error("Token de acesso não encontrado");
+                }
+
+                const response = await fetch(`/api/theme/${themeId}`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                });
+
+                if (!response.ok) {
+                    const errorData = await response
+                        .json()
+                        .catch(() => ({ error: "Erro na requisição" }));
+                    throw new Error(
+                        errorData.error || `Erro ${response.status}`
+                    );
+                }
+
+                const themeData = await response.json();
+                setTheme(themeData);
+            } catch (err) {
+                const errorMessage =
+                    err instanceof Error ? err.message : "Erro ao buscar tema";
+                setError(errorMessage);
+                setTheme(null);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchTheme();
+    }, [themeId]);
+
+    return { theme, loading, error };
 };
