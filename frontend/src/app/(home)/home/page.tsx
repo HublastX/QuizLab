@@ -14,7 +14,7 @@ export default function Home() {
                         <HomeCard
                             key={index}
                             title={card.title}
-                            icon={<div dangerouslySetInnerHTML= {{__html: card.icon}} />}
+                            icon={card.icon}
                             description={card.description}
                             href={card.href}
                             ariaLabel={card.ariaLabel}
