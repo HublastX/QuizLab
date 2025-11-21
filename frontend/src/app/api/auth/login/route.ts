@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
         }
 
         const newLogin = await response.json();
-        return NextResponse.json(newLogin, { status: 201 });
+        return NextResponse.json(newLogin, { status: 200 });
     } catch (error) {
         console.error("Erro na rota POST /auth/login:", error);
         return NextResponse.json(

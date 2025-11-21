@@ -26,20 +26,20 @@ services:
     networks:
       - project_network
 
-  # quizlab-frontend:
-  #   container_name: quizlab-frontend
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: Dockerfile
-  #     args:
-  #       NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-http://quizlab:9080}
-  #   restart: always
-  #   ports:
-  #     - 9081:9081
-  #   env_file:
-  #     - .env
-  #   networks:
-  #     - project_network
+  quizlab-frontend:
+    container_name: quizlab-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL:-http://quizlab:9080}
+    restart: always
+    ports:
+      - 9081:9081
+    env_file:
+      - .env
+    networks:
+      - project_network
 
 networks:
   project_network:

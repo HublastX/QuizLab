@@ -17,7 +17,7 @@ export interface AuthResponse {
 }
 
 export interface RegisterResponse {
-  id: number;
+  id: string;
   name: string;
   email: string;
   created_at: string;

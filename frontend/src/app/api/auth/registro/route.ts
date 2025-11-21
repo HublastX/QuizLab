@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
 
         const newRegistro = await response.json();
         console.log("✅ [REGISTRO] Registro criado com sucesso:", newRegistro);
-        return NextResponse.json(newRegistro, { status: 200 });
+        return NextResponse.json(newRegistro, { status: 201 });
     } catch (error) {
         console.error("❌ [REGISTRO] Erro na rota POST /auth/registro:", error);
         const errorMessage =

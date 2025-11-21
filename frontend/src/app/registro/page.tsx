@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/app/hook/useAuth";
+import { useAuth } from "@/hook/useAuth";
+import { Button } from "@/components/ui/button";
 
 export default function Registro() {
     const { register, loading, error } = useAuth();
@@ -26,7 +27,7 @@ export default function Registro() {
             <h1 className="text-6xl font-black">Registro bem legal</h1>
             <form
                 onSubmit={handleSubmit}
-                className="grid grid-cols-1 gap-4 mt-5 w-1/2 bg-layout-card"
+                className="grid grid-cols-1 gap-4 mt-5 w-1/2 bg-layout-card p-6"
             >
                 <div className="grid grid-cols-1 gap-2">
                     <label>Nome</label>
@@ -55,13 +56,13 @@ export default function Registro() {
                         required
                     />
                 </div>
-                <button
+                <Button
                     type="submit"
                     disabled={loading}
-                    className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 disabled:opacity-50"
+                    className="mt-4 hover:animate-ping"
                 >
                     {loading ? "Registrando..." : "Registrar"}
-                </button>
+                </Button>
             </form>
         </div>
     );

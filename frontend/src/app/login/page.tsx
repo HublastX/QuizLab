@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/app/hook/useAuth";
+import { useAuth } from "@/hook/useAuth";
 import { Button } from "@/components/ui/button";
 
 export default function Login() {

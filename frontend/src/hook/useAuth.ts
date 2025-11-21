@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
     LoginCredentials,
     RegisterCredentials,
@@ -9,6 +10,7 @@ import {
 } from "@/util/types/auth";
 
 export const useAuth = (): UseAuthReturn => {
+    const router = useRouter();
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -55,6 +57,9 @@ export const useAuth = (): UseAuthReturn => {
                 localStorage.setItem("access_token", token);
             }
 
+            // Redireciona para home após login bem-sucedido
+            router.push("/home");
+
             return data;
         } catch (err) {
             const errorMessage =
@@ -79,6 +84,9 @@ export const useAuth = (): UseAuthReturn => {
             });
 
             const data = await response.json();
+
+            // Redireciona para login após registro bem-sucedido
+            router.push("/login");
 
             return data;
         } catch (err) {
