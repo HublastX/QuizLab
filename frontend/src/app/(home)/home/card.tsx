@@ -16,7 +16,7 @@ export default function HomeCard({
     description?: string;
     href: string;
     ariaLabel?: string;
-    color?: string;
+    color?: "create" | "ranking" | "play";
     variant?: "defaut" | "theme";
 }) {
     const label =

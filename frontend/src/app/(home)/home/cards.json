@@ -1,10 +1,10 @@
 { 
-    "cards": 
+    "card": 
     [
         {
             "id": 1,
             "title": "Criar Quiz",
-            "icon": "<CiAlarmOn \/>",
+            "icon": "<CiAlarmOn />",
             "description": "Crie seus próprios quizzes personalizados.",
             "href": "/create",
             "ariaLabel": "Criar Quiz - Crie seus próprios quizzes personalizados.",
