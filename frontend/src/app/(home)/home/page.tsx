@@ -18,16 +18,42 @@ export default function Home() {
                     Olá, {user?.name}!
                 </h1>
                 <div className="grid grid-cols-3 mt-2 gap-6">
-                    {cards.card.map((card, index) => (
                         <HomeCard
-                            key={index}
-                            title={card.title}
-                            icon={card.icon}
-                            description={card.description}
-                            href={card.href}
-                            ariaLabel={card.ariaLabel}
-                            color = {card.color}
-                        />))}
+                            key= {1}
+                            title= "Criar Quiz"
+                            icon= {<CiAlarmOn />}
+                            description= "Crie seus próprios quizzes personalizados."
+                            href= "/create"
+                            ariaLabel= "Criar Quiz - Crie seus próprios quizzes personalizados."
+                            color = "create"
+                        />
+                        <HomeCard
+                            key= {2}
+                            title= "Título 1"
+                            icon= {<CiAlarmOn />}
+                            description= "Descrição 1"
+                            href= "#"
+                            ariaLabel= "Título 1 - Descrição 1."
+                            color = "create"
+                        />
+                        <HomeCard
+                            key= {3}
+                            title= "Título 2"
+                            icon= {<CiAlarmOn />}
+                            description= "Descrição 2"
+                            href= "#"
+                            ariaLabel= "Título 2 - Descrição 2."
+                            color = "create"
+                        />
+                        <HomeCard
+                            key= {4}
+                            title= "Título 3"
+                            icon= {<CiAlarmOn />}
+                            description= "Descrição 3"
+                            href= "#"
+                            ariaLabel= "Título 3 - Descrição 3."
+                            color = "create"
+                        />
                 </div>
                 <Acessibilidade />
             </div>
