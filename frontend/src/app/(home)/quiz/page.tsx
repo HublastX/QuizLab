@@ -1,7 +1,7 @@
 "use client";
 
+import { useQuiz } from "@/hook/useQuiz";
 import { useState } from "react";
-import { useQuiz } from "@/app/hook/useQuiz";
 
 export default function QuizTextTest() {
     const { quizText, loading, error, data } = useQuiz();

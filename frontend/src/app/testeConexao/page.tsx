@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/app/hook/useAuth";
+import { useAuth } from "@/hook/useAuth";
 import { useState } from "react";
 
 export default function TesteConexao() {
