@@ -4,7 +4,6 @@ import { CiAlarmOn, CiBasketball } from "react-icons/ci";
 import HomeCard from "./card";
 import Acessibilidade from "./acessibilidade";
 //import ThemeList from "./themeList";
-import cards from "./cards.json";
 
 
 export default function Home() {
