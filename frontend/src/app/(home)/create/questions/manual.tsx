@@ -4,12 +4,13 @@ import { Button } from "@/components/ui/button";
 export default function ManualQuestions() {
     return(
         <div className="space-y-6">
-            {/* Card de Pergunta 1 */}
+            nome da questão
+            <input type="text" />
             <div className="border border-gray-200 p-6 rounded-xl space-y-4 shadow-sm">
                 <div className="space-y-2">
-                    <label className="text-sm font-medium">Pergunta:</label>
+                    <label className="text-sm font-medium">Alternativa:</label>
                     <Input 
-                        placeholder="Escreva sua pergunta" 
+                        placeholder="Escreva sua Alternativa" 
                         className="border-gray-300 focus:border-gray-400"
                     />
                 </div>
@@ -19,7 +20,7 @@ export default function ManualQuestions() {
                         type="checkbox" 
                         className="w-4 h-4 rounded border-gray-300"
                     />
-                    <label className="text-sm font-medium">Esta é a correta?</label>
+                    <label className="text-sm font-medium">Está correta?</label>
                 </div>
                 
                 <div className="space-y-2">
@@ -31,12 +32,11 @@ export default function ManualQuestions() {
                 </div>
             </div>
 
-            {/* Card de Pergunta 2 */}
             <div className="border border-gray-200 p-6 rounded-xl space-y-4 shadow-sm">
                 <div className="space-y-2">
-                    <label className="text-sm font-medium">Pergunta:</label>
+                    <label className="text-sm font-medium">Alternativa:</label>
                     <Input 
-                        placeholder="Escreva sua pergunta" 
+                        placeholder="Escreva sua Alternativa" 
                         className="border-gray-300 focus:border-gray-400"
                     />
                 </div>
@@ -46,7 +46,7 @@ export default function ManualQuestions() {
                         type="checkbox" 
                         className="w-4 h-4 rounded border-gray-300"
                     />
-                    <label className="text-sm font-medium">Esta é a correta?</label>
+                    <label className="text-sm font-medium">Está correta?</label>
                 </div>
                 
                 <div className="space-y-2">
@@ -58,7 +58,6 @@ export default function ManualQuestions() {
                 </div>
             </div>
 
-            {/* Botão para adicionar mais alternativas */}
             <div className="flex justify-center">
                 <Button 
                     className="border-gray-300 hover:bg-gray-50"
