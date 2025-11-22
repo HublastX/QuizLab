@@ -4,11 +4,14 @@ import { CiAlarmOn, CiBasketball } from "react-icons/ci";
 import HomeCard from "./card";
 import Acessibilidade from "./acessibilidade";
 import { useUser } from "@/hook/useUser";
-//import ThemeList from "./themeList";
+import { useEffect } from "react";
 
 
 export default function Home() {
-const { user } = useUser();
+const { user, getMe } = useUser();
+  useEffect(() => {
+    getMe();
+  }, []);
 
     return (
         <div className="flex h-full mt-6 space-x-28">
