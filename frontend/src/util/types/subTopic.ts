@@ -7,7 +7,7 @@ export interface SubTopic {
   updated_at: string;
 }
 
-export interface CreateSubTopicData {
+export interface CreateSubTopicRequest {
   sub_topic: string;
   description: string;
   theme_id: string;
@@ -15,13 +15,10 @@ export interface CreateSubTopicData {
 
 export interface UseSubTopicReturn {
   subTopics: SubTopic[];
-  currentSubTopic: SubTopic | null;
   loading: boolean;
   error: string | null;
-  
-  fetchSubTopicsByTheme: (themeId: string) => Promise<void>;
-  fetchSubTopicById: (id: string) => Promise<void>;
-  createSubTopic: (subTopicData: CreateSubTopicData) => Promise<SubTopic>;
+  getSubTopicById: (subTopicId: string) => Promise<SubTopic>;
+  getSubTopicsByTheme: (themeId: string) => Promise<SubTopic[]>;
+  createSubTopic: (data: CreateSubTopicRequest) => Promise<SubTopic>;
   clearError: () => void;
-  clearCurrentSubTopic: () => void;
 }
