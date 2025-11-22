@@ -15,8 +15,8 @@ const { user, getMe } = useUser();
   }, []);
 
     return (
-        <div className="flex h-full mt-6 space-x-28">
-            <div className="flex-1 h-full flex flex-col gap-9">
+        <div className="flex h-full mt-6 space-x-24">
+            <div className="flex-1 h-full flex flex-col gap-9 max-w-2/3">
                 <h1 className="font-bold text-4xl capitalize">
                     Olá, {user?.name || "Visitante"}!
                 </h1>

@@ -29,7 +29,7 @@ export default function HomeCard({
 
     const variantClasses = {
         defaut: "",
-        theme: "max-w-40 max-h-27 hover:bg-layout-theme-hover",
+        theme: "max-h-27 min-w-100 hover:bg-layout-theme-hover w-full",
     };
 
     const colorKey: keyof typeof colorClasses = color ?? "play";
@@ -44,15 +44,13 @@ export default function HomeCard({
     return (
         <Link
             href={href}
-            className={`${variantClasses[variantKey]} ${colorBorderClass[colorKey]} bg-layout-card items-center p-4 rounded-lg shadow-md h-35 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 hover:shadow-lg transition-all duration-200 border`}
+            className={`${variantClasses[variantKey]} ${colorBorderClass[colorKey]} bg-layout-card items-center p-4 rounded-lg shadow-md h-35 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 hover:shadow-lg transition-all duration-200 border `}
             aria-label={label}
             role="button"
             tabIndex={0}
         >
             <div
-                className={`flex items-center space-x-2 mb-2 ${
-                    variant == "theme" ? "text-center w-full h-full" : ""
-                }`}
+                className='flex items-center space-x-2 mb-2'
             >
                 {icon && variant != "theme" && (
                     <span aria-hidden="true" className="shrink-0 text-center">
@@ -72,13 +70,16 @@ export default function HomeCard({
                 )}
                 {title && (
                     <h2
-                        className={`text-xl font-medium ${
-                            variant == "theme"
-                                ? "text-center w-full h-full"
-                                : ""
-                        }`}
+                        className='text-xl font-medium'
                     >
                         {title}
+                        {description && variant == "theme" && (
+                            <div className="text-sm font-normal mt-3">
+                                <p className=" leading-relaxed">
+                                    {description}
+                                </p>
+                            </div>
+                        )}
                     </h2>
                 )}
             </div>

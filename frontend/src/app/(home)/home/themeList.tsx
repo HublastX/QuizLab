@@ -5,39 +5,39 @@ import { useTheme } from "@/hook/useTheme";
 import HomeCard from "./card";
 
 export default function ThemeList() {
-  const { themes, loading, error, getThemes } = useTheme();
+    const { themes, loading, error, getThemes } = useTheme();
 
-  useEffect(() => {
-    getThemes();
-  }, []);
+    useEffect(() => {
+        getThemes();
+    }, []);
 
-  if (loading) {
-    return <p>Carregando temas...</p>;
-  }
+    if (loading) {
+        return <p>Carregando temas...</p>;
+    }
 
-  if (error) {
-    return <p>Erro ao carregar temas: {error}</p>;
-  }
+    if (error) {
+        return <p>Erro ao carregar temas: {error}</p>;
+    }
 
-  return (
-    <div>
-      <h1>Lista de Temas</h1>
-      <div>
-        {themes.length > 0 ? (
-          themes.map((theme) => (
-            <HomeCard
-              key={theme.id}
-              title={theme.title}
-              description={theme.description}
-              href={theme.id}
-              color="play"
-              variant="theme"
-            />
-          ))
-        ) : (
-          <p>Nenhum tema encontrado</p>
-        )}
-      </div>
-    </div>
-  );
+    return (
+        <div className="flex flex-col justify-center gap-6 h-full border p-6 rounded-lg bg-layout-card">
+            <h1 className="text-2xl font-bold">Lista de Temas</h1>
+            <div className="w-full flex flex-col gap-3 overflow-y-auto h-full">
+                {themes.length > 0 ? (
+                    themes.map((theme) => (
+                        <HomeCard
+                            key={theme.id}
+                            title={theme.title}
+                            description={theme.description}
+                            href={theme.id}
+                            color="play"
+                            variant="theme"
+                        />
+                    ))
+                ) : (
+                    <p>Nenhum tema encontrado</p>
+                )}
+            </div>
+        </div>
+    );
 }
