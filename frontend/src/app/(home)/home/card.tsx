@@ -9,7 +9,7 @@ export default function HomeCard({
     href,
     ariaLabel,
     color,
-    variant
+    variant,
 }: {
     title?: string;
     icon?: React.ReactNode;
@@ -35,26 +35,52 @@ export default function HomeCard({
     const colorKey: keyof typeof colorClasses = color ?? "play";
     const variantKey: keyof typeof variantClasses = variant ?? "defaut";
 
+    const colorBorderClass = {
+        create: "border-category-create",
+        ranking: "border-category-ranking",
+        play: "border-category-play",
+    };
+
     return (
         <Link
             href={href}
-            className={`${variantClasses[variantKey]} bg-layout-card items-center p-4 rounded-lg shadow-md h-35 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 hover:shadow-lg transition-all duration-200 border border-${colorClasses[colorKey]}`}
+            className={`${variantClasses[variantKey]} ${colorBorderClass[colorKey]} bg-layout-card items-center p-4 rounded-lg shadow-md h-35 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 hover:shadow-lg transition-all duration-200 border`}
             aria-label={label}
             role="button"
             tabIndex={0}
         >
-            <div className={`flex items-center space-x-2 mb-2 ${variant == "theme" ? "text-center w-full h-full" : ""}`}>
+            <div
+                className={`flex items-center space-x-2 mb-2 ${
+                    variant == "theme" ? "text-center w-full h-full" : ""
+                }`}
+            >
                 {icon && variant != "theme" && (
                     <span aria-hidden="true" className="shrink-0 text-center">
                         {React.isValidElement(icon)
-                            ? React.cloneElement(icon as React.ReactElement<any>, {
-                                  className: `size-6 text-${colorClasses[colorKey]} text-center center`,
-                                  strokeWidth: 1,
-                              })
+                            ? React.cloneElement(
+                                  icon as React.ReactElement<{
+                                      className?: string;
+                                      strokeWidth?: number;
+                                  }>,
+                                  {
+                                      className: `size-6 ${colorClasses[colorKey]} text-center center`,
+                                      strokeWidth: 1,
+                                  }
+                              )
                             : icon}
                     </span>
                 )}
-                {title && <h2 className={`text-xl font-medium ${variant == "theme" ? "text-center w-full h-full" : ""}`}>{title}</h2>}
+                {title && (
+                    <h2
+                        className={`text-xl font-medium ${
+                            variant == "theme"
+                                ? "text-center w-full h-full"
+                                : ""
+                        }`}
+                    >
+                        {title}
+                    </h2>
+                )}
             </div>
             {description && variant != "theme" && (
                 <div>
