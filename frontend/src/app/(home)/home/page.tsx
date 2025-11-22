@@ -26,7 +26,7 @@ const { user, getMe } = useUser();
                             title= "Criar Quiz"
                             icon= {<CiBookmarkPlus />}
                             description= "Crie seus próprios quizzes personalizados."
-                            href= "/create"
+                            href= "#"
                             ariaLabel= "Criar Quiz - Crie seus próprios quizzes personalizados."
                             color = "create"
                         />
