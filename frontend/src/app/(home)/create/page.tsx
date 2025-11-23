@@ -134,7 +134,7 @@ export default function CreateQuiz() {
 
       <nav className="flex justify-between mt-10">
         {currentStep === "questions" && (
-          <Button variant="outline" onClick={handleBack} disabled={saving}>
+          <Button variant="subtle" onClick={handleBack} disabled={saving}>
             Voltar
           </Button>
         )}
