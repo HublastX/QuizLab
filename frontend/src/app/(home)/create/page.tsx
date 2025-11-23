@@ -2,63 +2,155 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Theme } from "./theme/theme";
-import { Subtopic } from "./subtopic/subtopic";
 import Questions from "./questions/questions";
+import { useTheme } from "@/hook/useTheme";
+import { useSubTopic } from "@/hook/useSubTopic";
+import SetQuiz from "./theme/set";
 
 interface ThemeData {
-    id?: string;
-    title: string;
-    description: string;
-    isNew: boolean;
+  id?: string;
+  title: string;
+  description: string;
+  isNew: boolean;
 }
 
 interface SubtopicData {
-    id?: string;
-    subTopic: string;
-    description: string;
-    isNew: boolean;
+  id?: string;
+  subTopic: string;
+  description: string;
+  isNew: boolean;
 }
 
-type Step = "theme" | "subtopic" | "questions";
+export interface QuestionData {
+  text: string;
+  alternatives: {
+    text: string;
+    correct: boolean;
+    explanation: string;
+  }[];
+}
+
+type Step = "setup" | "questions";
 
 export default function CreateQuiz() {
-    const [currentStep, setCurrentStep] = useState<Step>("theme");
-    const [themeData, setThemeData] = useState<ThemeData | null>(null);
-    const [subtopicData, setSubtopicData] = useState<SubtopicData | null>(null);
+  const [currentStep, setCurrentStep] = useState<Step>("setup");
+  const [themeData, setThemeData] = useState<ThemeData | null>(null);
+  const [subtopicData, setSubtopicData] = useState<SubtopicData | null>(null);
+  const [questionsData, setQuestionsData] = useState<QuestionData[]>([]);
+  const [saving, setSaving] = useState(false);
 
-    const handleNext = () => {
-        if (currentStep === "theme") {
-            console.log("Theme:", themeData);
-            setCurrentStep("subtopic");
-        } else if (currentStep === "subtopic") {
-            console.log("Subtopic:", subtopicData);
-            setCurrentStep("questions");
-            // Aqui você pode avançar para o próximo passo ou fazer submit
-        }
-    };
+  const { createTheme } = useTheme();
+  const { createSubTopic } = useSubTopic();
 
-    return (
-        <div className="p-6">
-            {currentStep === "theme" && <Theme onThemeChange={setThemeData} />}
+  const handleNext = () => {
+    if (!themeData?.title) {
+      alert("Preencha o tema!");
+      return;
+    }
 
-            {currentStep === "subtopic" && (
-                <Subtopic
-                    themeId={themeData?.isNew ? undefined : themeData?.id}
-                    onSubtopicChange={setSubtopicData}
-                />
-            )}
+    if (!subtopicData?.subTopic) {
+      alert("Preencha o subtópico!");
+      return;
+    }
 
-            {currentStep === "questions" && <Questions />}
+    setCurrentStep("questions");
+  };
 
-            <nav className="flex justify-between mt-10">
-                {/* Espaço vazio para alinhar o botão Próximo à direita quando não houver Voltar */}
-                {currentStep === "theme" && <div />}
+  const handleBack = () => {
+    setCurrentStep("setup");
+  };
 
-                <Button onClick={handleNext}>
-                    {currentStep === "questions" ? "Finalizar" : "Próximo"}
-                </Button>
-            </nav>
-        </div>
-    );
+  const handleFinish = async () => {
+    if (questionsData.length === 0) {
+      alert("Adicione pelo menos uma questão!");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      // 1. Cria ou pega o theme
+      let themeId = themeData?.id;
+      if (themeData?.isNew) {
+        const newTheme = await createTheme({
+          title: themeData.title,
+          description: themeData.description,
+        });
+        themeId = newTheme.id;
+      }
+
+      // 2. Cria ou pega o subtopic
+      let subTopicId = subtopicData?.id;
+      if (subtopicData?.isNew) {
+        const newSubTopic = await createSubTopic({
+          sub_topic: subtopicData.subTopic,
+          description: subtopicData.description,
+          theme_id: themeId!,
+        });
+        subTopicId = newSubTopic.id;
+      }
+
+      // 3. Cria todas as questões
+      for (const question of questionsData) {
+        await fetch(`/quiz-lab/api/questions`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
+          },
+          body: JSON.stringify({
+            text: question.text,
+            sub_topic_id: subTopicId,
+            alternatives: question.alternatives,
+          }),
+        });
+      }
+
+      alert("Quiz criado com sucesso!");
+      window.location.href = "/quiz-lab/home";
+      
+    } catch (err) {
+      console.error("Erro ao criar quiz:", err);
+      alert("Erro ao criar quiz. Tente novamente.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="p-6">
+      {currentStep === "setup" && (
+        <SetQuiz
+          onThemeChange={setThemeData}
+          onSubtopicChange={setSubtopicData}
+        />
+      )}
+      
+      {currentStep === "questions" && (
+        <Questions
+          onQuestionsChange={setQuestionsData}
+          questions={questionsData}
+        />
+      )}
+
+      <nav className="flex justify-between mt-10">
+        {currentStep === "questions" && (
+          <Button variant="outline" onClick={handleBack} disabled={saving}>
+            Voltar
+          </Button>
+        )}
+        
+        {currentStep === "setup" && (
+          <Button onClick={handleNext} className="ml-auto">
+            Próximo
+          </Button>
+        )}
+
+        {currentStep === "questions" && (
+          <Button onClick={handleFinish} disabled={saving} className="ml-auto">
+            {saving ? "Salvando..." : "Finalizar"}
+          </Button>
+        )}
+      </nav>
+    </div>
+  );
 }
