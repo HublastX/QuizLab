@@ -23,10 +23,10 @@ export default function Login() {
         <div className="flex flex-col items-center justify-center">
             {loading && <p>Carregando...</p>}
             {error && <p className="text-red-500">Erro: {error}</p>}
-            <h1 className="text-6xl font-black">Login bem legal</h1>
+            <h1 className="text-6xl font-black">Login</h1>
             <form
                 onSubmit={handleSubmit}
-                className="grid grid-cols-1 gap-4 mt-5 w-1/2 bg-layout-card p-6"
+                className="grid grid-cols-1 gap-4 mt-5 w-1/2 bg-layout-card p-6 rounded-lg"
             >
                 <div className="grid grid-cols-1 gap-2">
                     <label>Email</label>
@@ -49,10 +49,11 @@ export default function Login() {
                 <Button
                     type="submit"
                     disabled={loading}
-                    className="mt-4 hover:animate-ping"
+                    className="mt-4 hover:bg-qorange-500"
                 >
                     {loading ? "Entrando..." : "Entrar"}
                 </Button>
+                <div>Novo no QuizLab? <a href="/quiz-lab/registro" className="text-qyellow-default cursor-pointer underline">Cadastre-se</a></div>
             </form>
         </div>
     );
