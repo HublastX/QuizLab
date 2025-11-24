@@ -12,6 +12,10 @@ class UserLoginSchema(BaseModel):
     email: str
     password: str
 
+class UserUpdateSchema(BaseModel):
+    name: str | None = None
+    email: str | None = None
+    password: str | None = None
 
 class UserResponseSchema(BaseModel):
     id: str

@@ -28,3 +28,24 @@ class UserRepository:
     
     def get_user_by_email(self, email: str) -> User:
         return self.db.query(User).filter(User.email == email).first()
+    
+    def update_user(self, user_id: str, update_data: dict) -> User | None:
+    user = self.get_user_by_id(user_id)
+    if not user:
+        return None
+
+    for key, value in update_data.items():
+        if value is not None:
+            setattr(user, key, value)
+
+    self.db.commit()
+    self.db.refresh(user)
+    return user
+
+def delete_user(self, user_id: str) -> bool:
+    user = self.get_user_by_id(user_id)
+    if user:
+        self.db.delete(user)
+        self.db.commit()
+        return True
+    return False
