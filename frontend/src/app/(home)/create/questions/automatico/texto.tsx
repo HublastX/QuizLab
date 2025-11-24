@@ -14,7 +14,7 @@ export function Texto() {
             <textarea
                 name="automaticQuestionsText"
                 id="automaticQuestionsText"
-                className="w-full h-48 border border-gray-300 rounded-md p-2"
+                className="w-full h-48 border  rounded-md p-2"
                 placeholder="Insira o texto aqui..."
             ></textarea>
         </div>

@@ -54,7 +54,8 @@ export default function Questions({
               questions={questions}
             />
           ) : (
-            <AutomaticQuestions onQuestionsChange={onQuestionsChange} />
+            // <AutomaticQuestions onQuestionsChange={onQuestionsChange} />
+            <AutomaticQuestions />
           )}
       </div>
     </div>
