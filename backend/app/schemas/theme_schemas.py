@@ -7,6 +7,11 @@ class ThemeCreateSchema(BaseModel):
     description: str
 
 
+class ThemeUpdateSchema(BaseModel):
+    title: str | None = None
+    description: str | None = None
+
+
 class ThemeResponseSchema(BaseModel):
     id: str
     title: str
