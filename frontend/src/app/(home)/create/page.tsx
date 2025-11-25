@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Questions from "./questions/questions";
 import { useTheme } from "@/hook/useTheme";
 import { useSubTopic } from "@/hook/useSubTopic";
+import { useQuestion} from "@/hook/useQuestion";
 import SetQuiz from "./theme/set";
 
 interface ThemeData {
@@ -41,6 +42,7 @@ export default function CreateQuiz() {
 
   const { createTheme } = useTheme();
   const { createSubTopic } = useSubTopic();
+  const { createQuestion } = useQuestion();
 
   const handleNext = () => {
     if (!themeData?.title) {
@@ -91,17 +93,10 @@ export default function CreateQuiz() {
 
       // 3. Cria todas as questões
       for (const question of questionsData) {
-        await fetch(`/quiz-lab/api/questions`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("access_token")}`,
-          },
-          body: JSON.stringify({
-            text: question.text,
-            sub_topic_id: subTopicId,
-            alternatives: question.alternatives,
-          }),
+        await createQuestion({
+          text: question.text,
+          sub_topic_id: subTopicId!,
+          alternatives: question.alternatives,
         });
       }
 
