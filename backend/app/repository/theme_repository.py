@@ -29,3 +29,34 @@ class ThemeRepository:
     def get_themes_by_user_id(self, user_id: str) -> list[Theme]:
         return self.db.query(Theme).filter(Theme.user_id == user_id).all()
 
+    def update_theme(self, theme_id: str, update_data: dict) -> Theme | None:
+        try:
+            theme = self.get_theme_by_id(theme_id)
+            if not theme:
+                return None
+
+            for key, value in update_data.items():
+                if value is not None:
+                    setattr(theme, key, value)
+
+            self.db.commit()
+            self.db.refresh(theme)
+            return theme
+
+        except Exception:
+            self.db.rollback()
+            raise
+
+    def delete_theme(self, theme_id: str) -> bool:
+        try:
+            theme = self.get_theme_by_id(theme_id)
+            if theme:
+                self.db.delete(theme)
+                self.db.commit()
+                return True
+
+            return False
+
+        except Exception:
+            self.db.rollback()
+            raise
