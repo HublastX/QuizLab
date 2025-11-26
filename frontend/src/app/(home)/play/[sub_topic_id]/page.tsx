@@ -230,7 +230,7 @@ export default function SubTopicPlayPage() {
                     </div>
 
                     <div className="flex gap-4 justify-center">
-                        <Button onClick={handleRestartQuiz} variant="default">
+                        <Button onClick={handleRestartQuiz} >
                             Refazer Quiz
                         </Button>
                         <Button
