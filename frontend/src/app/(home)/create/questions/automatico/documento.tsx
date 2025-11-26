@@ -1,4 +1,8 @@
-export function Documento() {
+interface DocumentoProps {
+    onBack: () => void;
+}
+
+export function Documento({ onBack }: DocumentoProps) {
     return (
         <div>
             <h2>Gerar questões automaticamente a partir de um documento</h2>

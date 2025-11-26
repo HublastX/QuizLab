@@ -1,4 +1,8 @@
-export function Audio() {
+interface AudioProps {
+    onBack: () => void;
+}
+
+export function Audio({ onBack }: AudioProps) {
     return (
         <div>
             <h2>Gerar questões automaticamente a partir de um áudio</h2>

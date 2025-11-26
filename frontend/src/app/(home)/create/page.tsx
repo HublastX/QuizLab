@@ -124,6 +124,8 @@ export default function CreateQuiz() {
         <Questions
           onQuestionsChange={setQuestionsData}
           questions={questionsData}
+          themeId={themeData?.id || ""}
+          subTopicId={subtopicData?.id || ""}
         />
       )}
 

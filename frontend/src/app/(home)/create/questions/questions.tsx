@@ -9,11 +9,15 @@ import { Button } from "@/components/ui/button";
 interface QuestionsProps {
   onQuestionsChange: (questions: QuestionData[]) => void;
   questions: QuestionData[];
+  themeId: string;
+  subTopicId: string;
 }
 
 export default function Questions({
   onQuestionsChange,
   questions,
+  themeId,
+  subTopicId,
 }: QuestionsProps) {
   const [mode, setMode] = useState<"manual" | "automatic">("manual");
 
@@ -54,7 +58,11 @@ export default function Questions({
               questions={questions}
             />
           ) : (
-            <AutomaticQuestions />
+            <AutomaticQuestions
+              onQuestionsGenerated={onQuestionsChange}
+              themeId={themeId}
+              subTopicId={subTopicId}
+            />
           )}
       </div>
     </div>
