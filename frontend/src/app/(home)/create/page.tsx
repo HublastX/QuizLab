@@ -33,6 +33,8 @@ export interface QuestionData {
     correct: boolean;
     explanation: string;
   }[];
+  theme_id: string;
+  sub_topic_id: string;
 }
 
 type Step = "setup" | "questions";
@@ -77,6 +79,8 @@ export default function CreateQuiz() {
             correct: alt.correta,
             explanation: alt.explicacao,
         })),
+        theme_id: pergunta.theme_id,
+        sub_topic_id: pergunta.sub_topic_id,
     }));
   };
 
@@ -135,24 +139,24 @@ export default function CreateQuiz() {
             text: automaticData.text,
             num_questions: automaticData.num_questions,
             num_alternatives: automaticData.num_alternatives,
-            theme_id: themeId,
-            sub_topic_id: subTopicId
+            theme_id: themeId!,
+            sub_topic_id: subTopicId!
           });
         } else if (automaticData.mode === "audio" && automaticData.file) {
           response = await createQuizFromAudio({
             file: automaticData.file,
             num_questions: automaticData.num_questions,
             num_alternatives: automaticData.num_alternatives,
-            theme_id: themeId,
-            sub_topic_id: subTopicId
+            theme_id: themeId!,
+            sub_topic_id: subTopicId!
           });
         } else if (automaticData.mode === "document" && automaticData.file) {
           response = await createQuizFromDocument({
             file: automaticData.file,
             num_questions: automaticData.num_questions,
             num_alternatives: automaticData.num_alternatives,
-            theme_id: themeId,
-            sub_topic_id: subTopicId
+            theme_id: themeId!,
+            sub_topic_id: subTopicId!
           });
         }
 
