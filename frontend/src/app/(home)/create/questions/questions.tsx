@@ -1,21 +1,34 @@
+// /create/question/questions.tsx
 "use client";
 
-import { useState } from "react";
-import AutomaticQuestions from "./automatico/automatico";
+import { useState, useEffect } from "react";
+import AutomaticQuestions, { AutomaticModeData } from "./automatico/automatico";
 import ManualQuestions from "./manual";
 import { QuestionData } from "../page";
 import { Button } from "@/components/ui/button";
 
 interface QuestionsProps {
   onQuestionsChange: (questions: QuestionData[]) => void;
+  onAutomaticDataChange: (data: AutomaticModeData | null) => void;
+  onModeChange: (mode: "manual" | "automatic") => void;
   questions: QuestionData[];
+  themeId: string;
+  subTopicId: string;
 }
 
 export default function Questions({
   onQuestionsChange,
+  onAutomaticDataChange,
+  onModeChange,
   questions,
+  themeId,
+  subTopicId,
 }: QuestionsProps) {
   const [mode, setMode] = useState<"manual" | "automatic">("manual");
+
+  useEffect(() => {
+    onModeChange(mode);
+  }, [mode, onModeChange]);
 
   return (
     <div className="overflow-hidden h-full">
@@ -54,8 +67,9 @@ export default function Questions({
               questions={questions}
             />
           ) : (
-            // <AutomaticQuestions onQuestionsChange={onQuestionsChange} />
-            <AutomaticQuestions />
+            <AutomaticQuestions
+              onDataChange={onAutomaticDataChange}
+            />
           )}
       </div>
     </div>

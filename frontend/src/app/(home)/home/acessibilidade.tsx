@@ -59,6 +59,8 @@ export default function Acessibilidade() {
                 localStorage.removeItem(STORAGE_KEY);
                 document.documentElement.classList.remove("font-dyslexic");
             }
+            // Dispara evento para sincronizar com outras páginas
+            window.dispatchEvent(new Event("accessibilityChange"));
         } catch {}
     }, [useDys]);
 
@@ -72,6 +74,8 @@ export default function Acessibilidade() {
                 `${fontSize}px`
             );
             localStorage.setItem(STORAGE_FONT_SIZE, String(fontSize));
+            // Dispara evento para sincronizar com outras páginas
+            window.dispatchEvent(new Event("accessibilityChange"));
         } catch {}
     }, [fontSize]);
 

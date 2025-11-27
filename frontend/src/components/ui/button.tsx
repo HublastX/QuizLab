@@ -1,7 +1,7 @@
 "use client";
 
 import { forwardRef } from "react";
-import type { ButtonHTMLAttributes } from "react";
+import type { ButtonHTMLAttributes, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 const baseStyles =
@@ -25,10 +25,11 @@ export type ButtonSize = keyof typeof sizeStyles;
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: ButtonVariant;
     size?: ButtonSize;
+    suffix?: ReactNode;
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-    ({ variant = "solid", size = "md", className, disabled, ...props }, ref) => {
+    ({ variant = "solid", size = "md", className, disabled, suffix, children, ...props }, ref) => {
         return (
             <button
                 ref={ref}
@@ -41,7 +42,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                 )}
                 disabled={disabled}
                 {...props}
-            />
+            >
+                {children}
+                {suffix && <span className="ml-2">{suffix}</span>}
+            </button>
         );
     }
 );

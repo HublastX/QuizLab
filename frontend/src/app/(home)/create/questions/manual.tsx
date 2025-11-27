@@ -55,7 +55,6 @@ export default function ManualQuestions({
             alert("Digite o texto da questão!");
             return;
         }
-
         const filledAlternatives = alternatives.filter((alt) =>
             alt.text.trim()
         );
@@ -67,6 +66,15 @@ export default function ManualQuestions({
         const hasCorrect = filledAlternatives.some((alt) => alt.correct);
         if (!hasCorrect) {
             alert("Marque pelo menos uma alternativa como correta!");
+            return;
+        }
+
+        // Valida se todas as alternativas preenchidas têm explicação
+        const allHaveExplanation = filledAlternatives.every((alt) =>
+            alt.explanation.trim()
+        );
+        if (!allHaveExplanation) {
+            alert("Todas as alternativas precisam ter uma explicação!");
             return;
         }
 
@@ -113,7 +121,7 @@ export default function ManualQuestions({
                             aria-label="Texto da questão"
                         />
                     </div>
-                    
+
                     <div className="space-y-4">
                         {alternatives.map((alt, index) => (
                             <div
@@ -128,8 +136,12 @@ export default function ManualQuestions({
                                         <Button
                                             variant="ghost"
                                             size="sm"
-                                            onClick={() => removeAlternative(index)}
-                                            aria-label={`Remover alternativa ${index + 1}`}
+                                            onClick={() =>
+                                                removeAlternative(index)
+                                            }
+                                            aria-label={`Remover alternativa ${
+                                                index + 1
+                                            }`}
                                         >
                                             ✕ Remover
                                         </Button>
@@ -146,7 +158,9 @@ export default function ManualQuestions({
                                             e.target.value
                                         )
                                     }
-                                    aria-label={`Texto da alternativa ${index + 1}`}
+                                    aria-label={`Texto da alternativa ${
+                                        index + 1
+                                    }`}
                                 />
                                 <div className="flex items-center space-x-2">
                                     <input
@@ -160,7 +174,9 @@ export default function ManualQuestions({
                                                 e.target.checked
                                             )
                                         }
-                                        aria-label={`Marcar alternativa ${index + 1} como correta`}
+                                        aria-label={`Marcar alternativa ${
+                                            index + 1
+                                        } como correta`}
                                     />
                                     <label className="text-sm font-medium">
                                         Está correta?
@@ -181,13 +197,15 @@ export default function ManualQuestions({
                                                 e.target.value
                                             )
                                         }
-                                        aria-label={`Explicação da alternativa ${index + 1}`}
+                                        aria-label={`Explicação da alternativa ${
+                                            index + 1
+                                        }`}
                                     />
                                 </div>
                             </div>
                         ))}
                     </div>
-                    
+
                     <div className="flex justify-center gap-4 mt-4">
                         <Button
                             variant="subtle"
@@ -200,8 +218,8 @@ export default function ManualQuestions({
                     </div>
 
                     <div className="mt-6">
-                        <Button 
-                            onClick={handleAddQuestion} 
+                        <Button
+                            onClick={handleAddQuestion}
                             className="w-full"
                             aria-label="Salvar questão e criar mais uma"
                         >
@@ -216,7 +234,7 @@ export default function ManualQuestions({
                 <h3 className="font-semibold mb-4">
                     Questões adicionadas: {questions.length}
                 </h3>
-                
+
                 {questions.length > 0 ? (
                     <div className="space-y-2">
                         {questions.map((q, idx) => (
@@ -225,14 +243,15 @@ export default function ManualQuestions({
                                 className="flex justify-between items-center py-3 px-4 border border-gray-200 hover:bg-gray-50 rounded-lg"
                             >
                                 <span className="text-sm flex-1">
-                                    <strong>{idx + 1}.</strong> {q.text.substring(0, 50)}
+                                    <strong>{idx + 1}.</strong>{" "}
+                                    {q.text.substring(0, 50)}
                                     {q.text.length > 50 && "..."}
                                 </span>
                                 <Button
                                     variant="ghost"
                                     size="sm"
                                     onClick={() => removeQuestion(idx)}
-                                    className="ml-2 flex-shrink-0"
+                                    className="ml-2 shrink-0"
                                     aria-label={`Remover questão ${idx + 1}`}
                                 >
                                     ✕

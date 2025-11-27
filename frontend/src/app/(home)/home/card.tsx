@@ -1,6 +1,5 @@
 import Link from "next/link";
 import React from "react";
-import { CiAlarmOn } from "react-icons/ci";
 
 export default function HomeCard({
     title,
@@ -8,8 +7,9 @@ export default function HomeCard({
     description,
     href,
     ariaLabel,
-    color,
-    variant,
+    color = "play",
+    variant = "defaut",
+    cornerIcon,
 }: {
     title?: string;
     icon?: React.ReactNode;
@@ -18,6 +18,7 @@ export default function HomeCard({
     ariaLabel?: string;
     color?: "create" | "ranking" | "play";
     variant?: "defaut" | "theme";
+    cornerIcon?: React.ReactNode;
 }) {
     const label =
         ariaLabel || `${title}${description ? ` - ${description}` : ""}`;
@@ -28,32 +29,27 @@ export default function HomeCard({
     };
 
     const variantClasses = {
-        defaut: "",
+        defaut: "relative group",
         theme: "max-h-27 min-w-100 hover:bg-layout-theme-hover w-full",
     };
 
-    const colorKey: keyof typeof colorClasses = color ?? "play";
-    const variantKey: keyof typeof variantClasses = variant ?? "defaut";
-
-    const colorBorderClass = {
-        create: "border-category-create",
-        ranking: "border-category-ranking",
-        play: "border-category-play",
-    };
+    const colorKey: keyof typeof colorClasses = color;
+    const variantKey: keyof typeof variantClasses = variant;
 
     return (
         <Link
             href={href}
-            className={`${variantClasses[variantKey]} ${colorBorderClass[colorKey]} bg-layout-card items-center p-4 rounded-lg shadow-md h-35 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 hover:shadow-lg transition-all duration-200 border `}
+            className={`${variantClasses[variantKey]} bg-layout-card items-center p-4 rounded-lg shadow-md h-35 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 hover:shadow-lg transition-all duration-200 border hover:shadow-xl hover:border-qorange-default hover:border-2 relative`}
             aria-label={label}
             role="button"
             tabIndex={0}
         >
-            <div
-                className='flex items-center space-x-2 mb-2'
-            >
+            <div className='flex items-center space-x-2 mb-2'>
                 {icon && variant != "theme" && (
-                    <span aria-hidden="true" className="shrink-0 text-center">
+                    <span 
+                        aria-hidden="true" 
+                        className="shrink-0 text-center p-2 rounded-lg group-hover:text-qorange-default transition-colors duration-200"
+                    >
                         {React.isValidElement(icon)
                             ? React.cloneElement(
                                   icon as React.ReactElement<{
@@ -61,7 +57,7 @@ export default function HomeCard({
                                       strokeWidth?: number;
                                   }>,
                                   {
-                                      className: `size-6 ${colorClasses[colorKey]} text-center center`,
+                                      className: `size-6 ${colorClasses[colorKey]} text-center center group-hover:text-qorange-default transition-colors duration-200`,
                                       strokeWidth: 1,
                                   }
                               )
@@ -69,13 +65,11 @@ export default function HomeCard({
                     </span>
                 )}
                 {title && (
-                    <h2
-                        className='text-xl font-medium'
-                    >
+                    <h2 className='text-xl font-medium group-hover:text-qorange-default transition-colors duration-200'>
                         {title}
                         {description && variant == "theme" && (
                             <div className="text-sm font-normal mt-3">
-                                <p className=" leading-relaxed">
+                                <p className="leading-relaxed group-hover:text-qorange-default transition-colors duration-200">
                                     {description}
                                 </p>
                             </div>
@@ -85,7 +79,26 @@ export default function HomeCard({
             </div>
             {description && variant != "theme" && (
                 <div>
-                    <p className=" leading-relaxed">{description}</p>
+                    <p className="leading-relaxed group-hover:text-qorange-default transition-colors duration-200">{description}</p>
+                </div>
+            )}
+            
+            {cornerIcon && variant != "theme" && (
+                <div className="absolute bottom-3 right-3">
+                    <span aria-hidden="true">
+                        {React.isValidElement(cornerIcon)
+                            ? React.cloneElement(
+                                  cornerIcon as React.ReactElement<{
+                                      className?: string;
+                                      size?: number;
+                                  }>,
+                                  {
+                                      className: "size-5 group-hover:text-qorange-default transition-colors duration-200",
+                                      size: 20,
+                                  }
+                              )
+                            : cornerIcon}
+                    </span>
                 </div>
             )}
         </Link>
