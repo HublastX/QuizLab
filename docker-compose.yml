@@ -7,7 +7,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./data:/var/lib/postgresql/data
+      - quizlab-db-data:/var/lib/postgresql/data
     networks:
       - project_network
 
@@ -19,8 +19,6 @@ services:
       - 9080:9080
     env_file:
       - .env
-    volumes:
-      - ./data:/home/uv-app-user/app/data
     depends_on:
       - quizlab-db
     networks:
@@ -40,6 +38,9 @@ services:
       - .env
     networks:
       - project_network
+
+volumes:
+  quizlab-db-data:
 
 networks:
   project_network:

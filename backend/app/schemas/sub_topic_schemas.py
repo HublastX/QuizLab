@@ -8,6 +8,11 @@ class SubTopicCreateSchema(BaseModel):
     theme_id: str
 
 
+class SubTopicUpdateSchema(BaseModel):
+    sub_topic: str | None = None
+    description: str | None = None
+
+
 class SubTopicResponseSchema(BaseModel):
     id: str
     sub_topic: str

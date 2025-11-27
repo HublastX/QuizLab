@@ -29,3 +29,35 @@ class SubTopicRepository:
     def get_sub_topics_by_theme_id(self, theme_id: str) -> list[SubTopic]:
         return self.db.query(SubTopic).filter(SubTopic.theme_id == theme_id).all()
 
+    def update_sub_topic(self, sub_topic_id: str, update_data: dict) -> SubTopic | None:
+        try:
+            sub_topic = self.get_sub_topic_by_id(sub_topic_id)
+            if not sub_topic:
+                return None
+
+            for key, value in update_data.items():
+                if value is not None:
+                    setattr(sub_topic, key, value)
+
+            self.db.commit()
+            self.db.refresh(sub_topic)
+            return sub_topic
+
+        except Exception:
+            self.db.rollback()
+            raise
+
+    def delete_sub_topic(self, sub_topic_id: str) -> bool:
+        try:
+            sub_topic = self.get_sub_topic_by_id(sub_topic_id)
+            if sub_topic:
+                self.db.delete(sub_topic)
+                self.db.commit()
+                return True
+
+            return False
+
+        except Exception:
+            self.db.rollback()
+            raise
+
