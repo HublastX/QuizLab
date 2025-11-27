@@ -33,8 +33,8 @@ export interface QuestionData {
     correct: boolean;
     explanation: string;
   }[];
-  theme_id: string;
-  sub_topic_id: string;
+  theme_id?: string;
+  sub_topic_id?: string;
 }
 
 type Step = "setup" | "questions";
