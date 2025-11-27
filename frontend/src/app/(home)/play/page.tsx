@@ -221,7 +221,7 @@ export default function PlayPage() {
                                                         href={`/teste/question?subTopic=${subTopic.id}`}
                                                         className="flex-1"
                                                     >
-                                                        <Button
+                                                      <Button
                                                             size="sm"
                                                             variant="subtle"
                                                             className="w-full text-xs"

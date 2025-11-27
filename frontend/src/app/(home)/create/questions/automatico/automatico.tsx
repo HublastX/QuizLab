@@ -1,3 +1,4 @@
+// /create/question/automatico/automatico.tsx
 "use client";
 
 import { useState } from "react";
@@ -5,41 +6,56 @@ import { Texto } from "./texto";
 import { Documento } from "./documento";
 import { Audio } from "./audio";
 
-type GenerationMode = "text" | "document" | "audio" | null;
+export type GenerationMode = "text" | "document" | "audio" | null;
 
-interface AutomaticQuestionsProps {
-    onQuestionsGenerated: (questions: {
-        text: string;
-        alternatives: {
-            text: string;
-            correct: boolean;
-            explanation: string;
-        }[];
-    }[]) => void;
-    themeId: string;
-    subTopicId: string;
+export interface AutomaticModeData {
+    mode: "text" | "audio" | "document";
+    text?: string;
+    file?: File;
+    num_questions: number;
+    num_alternatives: number;
 }
 
-export default function AutomaticQuestions({ onQuestionsGenerated, themeId, subTopicId }: AutomaticQuestionsProps) {
+interface AutomaticQuestionsProps {
+    onDataChange: (data: AutomaticModeData | null) => void;
+}
+
+export default function AutomaticQuestions({ onDataChange }: AutomaticQuestionsProps) {
     const [mode, setMode] = useState<GenerationMode>(null);
+
+    const handleDataChange = (data: { text?: string; file?: File; num_questions: number; num_alternatives: number } | null) => {
+        if (data && mode) {
+            onDataChange({
+                mode: mode,
+                ...data
+            });
+        } else {
+            onDataChange(null);
+        }
+    };
 
     if (mode === "text") {
         return (
             <Texto
-                onBack={() => setMode(null)}
-                onQuestionsGenerated={onQuestionsGenerated}
-                themeId={themeId}
-                subTopicId={subTopicId}
+                onDataChange={handleDataChange}
             />
         );
     }
 
     if (mode === "document") {
-        return <Documento onBack={() => setMode(null)} />;
+        return (
+            <Documento
+                onDataChange={handleDataChange}
+            />
+        );
     }
 
     if (mode === "audio") {
-        return <Audio onBack={() => setMode(null)} />;
+        return (
+            <Audio
+                onDataChange={handleDataChange}
+            />
+        );
     }
 
     return (

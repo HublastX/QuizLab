@@ -1,98 +1,56 @@
+// /create/question/automatico/texto.tsx
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { useQuiz } from "@/hook/useQuiz";
-import { QuizPergunta } from "@/util/types/quiz";
 
 interface TextoProps {
-    onBack: () => void;
-    onQuestionsGenerated: (questions: {
-        text: string;
-        alternatives: {
-            text: string;
-            correct: boolean;
-            explanation: string;
-        }[];
-    }[]) => void;
-    themeId: string;
-    subTopicId: string;
+    onDataChange: (data: { text: string; num_questions: number; num_alternatives: number } | null) => void;
 }
 
-export function Texto({ onBack, onQuestionsGenerated, themeId, subTopicId }: TextoProps) {
+export function Texto({ onDataChange }: TextoProps) {
     const [text, setText] = useState("");
     const [numQuestions, setNumQuestions] = useState(5);
     const [numAlternatives, setNumAlternatives] = useState(4);
-    const { createQuizFromText, loading: generating } = useQuiz();
 
-    const convertQuizToQuestions = (quizPerguntas: QuizPergunta[]) => {
-        return quizPerguntas.map((pergunta) => ({
-            text: pergunta.pergunta,
-            alternatives: pergunta.alternativas.map((alt) => ({
-                text: alt.texto,
-                correct: alt.correta,
-                explanation: alt.explicacao,
-            })),
-        }));
+    // Atualiza os dados sempre que algo mudar
+    const updateData = (newText: string, newNumQuestions: number, newNumAlternatives: number) => {
+        if (newText.trim() && newNumQuestions >= 1 && newNumQuestions <= 50 && newNumAlternatives >= 2 && newNumAlternatives <= 6) {
+            onDataChange({
+                text: newText.trim(),
+                num_questions: newNumQuestions,
+                num_alternatives: newNumAlternatives
+            });
+        } else {
+            onDataChange(null);
+        }
     };
 
-    const handleGenerate = async () => {
-        if (!text.trim()) {
-            alert("Por favor, insira um texto para gerar as questões.");
-            return;
-        }
+    const handleTextChange = (value: string) => {
+        setText(value);
+        updateData(value, numQuestions, numAlternatives);
+    };
 
-        if (numQuestions < 1 || numQuestions > 50) {
-            alert("O número de questões deve estar entre 1 e 50.");
-            return;
-        }
+    const handleQuestionsChange = (value: number) => {
+        setNumQuestions(value);
+        updateData(text, value, numAlternatives);
+    };
 
-        if (numAlternatives < 2 || numAlternatives > 6) {
-            alert("O número de alternativas deve estar entre 2 e 6.");
-            return;
-        }
-
-        try {
-            const response = await createQuizFromText({
-                text,
-                theme_id: themeId,
-                sub_topic_id: subTopicId,
-                num_questions: numQuestions,
-                num_alternatives: numAlternatives,
-            });
-
-            const convertedQuestions = convertQuizToQuestions(response.perguntas);
-            onQuestionsGenerated(convertedQuestions);
-            
-            alert(`${convertedQuestions.length} questões geradas com sucesso!`);
-            onBack();
-        } catch (error) {
-            console.error("Erro ao gerar questões:", error);
-            alert(error instanceof Error ? error.message : "Erro ao gerar questões. Tente novamente.");
-        }
+    const handleAlternativesChange = (value: number) => {
+        setNumAlternatives(value);
+        updateData(text, numQuestions, value);
     };
 
     return (
         <div className="max-w-4xl mx-auto">
             <div className="mb-6">
-                <button
-                    onClick={onBack}
-                    className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
-                    disabled={generating}
-                >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                    </svg>
-                    Voltar
-                </button>
-                <h2 className="text-2xl font-bold mb-2">Gerar Questões a partir de Texto</h2>
+                <h3 className="text-xl font-bold mb-2">Texto Base</h3>
                 <p className="text-gray-600">
                     Cole ou digite o texto que será usado como base para gerar as questões automaticamente
                 </p>
             </div>
 
             <div className="bg-layout-card border rounded-lg p-6 mb-6">
-                <h3 className="font-semibold mb-4">Configurações</h3>
+                <h4 className="font-semibold mb-4">Configurações</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label htmlFor="numQuestions" className="block text-sm font-medium mb-2">
@@ -104,9 +62,8 @@ export function Texto({ onBack, onQuestionsGenerated, themeId, subTopicId }: Tex
                             min="1"
                             max="50"
                             value={numQuestions}
-                            onChange={(e) => setNumQuestions(Number(e.target.value))}
-                            disabled={generating}
-                            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            onChange={(e) => handleQuestionsChange(Number(e.target.value))}
+                            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                         />
                         <p className="text-xs text-gray-500 mt-1">Entre 1 e 50 questões</p>
                     </div>
@@ -121,9 +78,8 @@ export function Texto({ onBack, onQuestionsGenerated, themeId, subTopicId }: Tex
                             min="2"
                             max="6"
                             value={numAlternatives}
-                            onChange={(e) => setNumAlternatives(Number(e.target.value))}
-                            disabled={generating}
-                            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            onChange={(e) => handleAlternativesChange(Number(e.target.value))}
+                            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
                         />
                         <p className="text-xs text-gray-500 mt-1">Entre 2 e 6 alternativas</p>
                     </div>
@@ -137,22 +93,21 @@ export function Texto({ onBack, onQuestionsGenerated, themeId, subTopicId }: Tex
                 <textarea
                     id="textInput"
                     value={text}
-                    onChange={(e) => setText(e.target.value)}
-                    disabled={generating}
-                    className="w-full h-64 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-none disabled:opacity-50 disabled:cursor-not-allowed"
+                    onChange={(e) => handleTextChange(e.target.value)}
+                    className="w-full h-64 px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-none"
                     placeholder="Cole ou digite o texto aqui...&#10;&#10;Exemplo: A fotossíntese é o processo pelo qual as plantas convertem luz solar em energia química. Durante este processo, as plantas absorvem dióxido de carbono do ar e água do solo..."
                 />
                 <div className="flex justify-between items-center mt-2">
                     <p className="text-xs text-gray-500">{text.length} caracteres</p>
-                    {text.length > 0 && !generating && (
-                        <button onClick={() => setText("")} className="text-xs text-red-600 hover:text-red-700">
+                    {text.length > 0 && (
+                        <button onClick={() => handleTextChange("")} className="text-xs text-red-600 hover:text-red-700">
                             Limpar texto
                         </button>
                     )}
                 </div>
             </div>
 
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                 <div className="flex items-start gap-3">
                     <svg className="w-5 h-5 text-yellow-600 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
@@ -161,31 +116,10 @@ export function Texto({ onBack, onQuestionsGenerated, themeId, subTopicId }: Tex
                         <p className="text-sm font-medium text-yellow-900">Importante</p>
                         <p className="text-sm text-yellow-800">
                             Quanto mais detalhado e estruturado for o texto, melhores serão as questões geradas. 
-                            Recomendamos textos com pelo menos 200 caracteres.
+                            Recomendamos textos com pelo menos 200 caracteres. Clique em "Finalizar" para criar o quiz.
                         </p>
                     </div>
                 </div>
-            </div>
-
-            <div className="flex gap-4">
-                <Button onClick={handleGenerate} disabled={generating || !text.trim()} className="flex-1">
-                    {generating ? (
-                        <>
-                            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            Gerando Questões...
-                        </>
-                    ) : (
-                        <>
-                            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                            </svg>
-                            Gerar Questões
-                        </>
-                    )}
-                </Button>
             </div>
         </div>
     );
