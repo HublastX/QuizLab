@@ -1,23 +1,49 @@
 "use client";
 
-import { CiAlarmOn, CiBasketball, CiBookmarkPlus, CiShare1, CiUser, CiViewList } from "react-icons/ci";
+import {  CiBookmarkPlus, CiUser, CiViewList } from "react-icons/ci";
+import { BsArrowUp, BsArrowDown, BsArrowLeft, BsArrowRight } from "react-icons/bs";
 import HomeCard from "./card";
 import Acessibilidade from "./acessibilidade";
 import { useUser } from "@/hook/useUser";
 import { useEffect } from "react";
-// import ThemeList from "./themeList";
-
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-const { user, getMe } = useUser();
-  useEffect(() => {
-    getMe();
-  }, []);
+    const { user, getMe } = useUser();
+    const router = useRouter();
+
+    useEffect(() => {
+        getMe();
+    }, []);
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            switch (e.key) {
+                case "ArrowUp":
+                    e.preventDefault();
+                    router.push("/create"); // Navega para Criar Quiz
+                    break;
+                case "ArrowDown":
+                    e.preventDefault();
+                    router.push("/play"); // Navega para Ver Quizzes
+                    break;
+                case "ArrowRight":
+                    e.preventDefault();
+                    router.push("/profile"); // Navega para Perfil
+                    break;
+            }
+        };
+
+        document.addEventListener("keydown", handleKeyDown);
+        
+        return () => {
+            document.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [router]);
 
     return (
         <div className="flex h-full mt-6 space-x-24">
             <div className="flex-1 h-full flex flex-col gap-9">
-            {/* <div className="flex-1 h-full flex flex-col gap-9 max-w-2/3"> */}
                 <h1 className="font-bold text-4xl capitalize">
                     Olá, {user?.name || "Visitante"}!
                 </h1>
@@ -30,7 +56,7 @@ const { user, getMe } = useUser();
                             href= "/create"
                             ariaLabel= "Criar Quiz - Crie seus próprios quizzes personalizados."
                             color= "create"
-                            cornerIcon={<CiShare1 />}
+                            cornerIcon={<BsArrowUp />}
                         />
                         <HomeCard
                             key= {3}
@@ -39,6 +65,7 @@ const { user, getMe } = useUser();
                             description= "Veja sua lista de quizzes."
                             href= "/play"
                             color= "play"
+                            cornerIcon={<BsArrowDown />}
                             />
                         <HomeCard
                             key= {4}
@@ -47,12 +74,12 @@ const { user, getMe } = useUser();
                             description= "Acesse e edite seu perfil."
                             href= "/profile"
                             color= "ranking"
+                            cornerIcon={<BsArrowRight />}
                         />
                 </div>
                 <Acessibilidade />
             </div>
 
-            {/* <ThemeList /> */}
         </div>
     );
 }

@@ -1,4 +1,3 @@
-// /create/question/automatico/automatico.tsx
 "use client";
 
 import { useState } from "react";
