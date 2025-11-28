@@ -3,16 +3,18 @@ PROMPT_CREATE_QUIZ = """Analise o seguinte texto e crie exatamente {num_question
     TEXTO:
     {text}
 
-    INSTRUÇÕES:
-    1. Crie {num_questions} perguntas baseadas no texto acima.
-    2. Crie {num_alternatives} alternativas para cada pergunta.
+    INSTRUÇÕES CRÍTICAS:
+    1. Crie EXATAMENTE {num_questions} perguntas ÚNICAS e DIFERENTES baseadas no texto acima.
+    2. Crie EXATAMENTE {num_alternatives} alternativas para cada pergunta.
     3. Cada pergunta deve ter exatamente {num_alternatives} alternativas.
     4. Apenas uma alternativa deve estar correta para cada pergunta.
-    5. Indique qual alternativa é a correta para cada pergunta.
-    6. Para cada alternativa, inclua um campo "explicacao" que explique brevemente:
+    5. NUNCA repita perguntas - cada pergunta deve ser única e abordar aspectos diferentes do texto.
+    6. NUNCA duplique o conteúdo - retorne apenas uma vez cada pergunta.
+    7. Indique qual alternativa é a correta para cada pergunta.
+    8. Para cada alternativa, inclua um campo "explicacao" que explique brevemente:
        - Para a alternativa correta: por que ela está correta
        - Para as alternativas incorretas: por que estão incorretas
-    7. Retorne os dados em formato JSON exatamente como no exemplo a seguir, sem texto adicional:
+    9. Retorne os dados em formato JSON exatamente como no exemplo a seguir, sem texto adicional:
 
     ```json
     {{
@@ -51,6 +53,12 @@ PROMPT_CREATE_QUIZ = """Analise o seguinte texto e crie exatamente {num_question
     }}
     ```
 
-    Importante: As explicações devem ser concisas (curta) e baseadas nas informações do texto. Para alternativas corretas, explique por que estão certas; para incorretas, explique por que estão erradas seja curto mas detalhado ter uma boa explicação.
+    IMPORTANTE: 
+    - As explicações devem ser concisas e baseadas nas informações do texto
+    - Para alternativas corretas, explique por que estão certas
+    - Para incorretas, explique por que estão erradas
+    - RETORNE EXATAMENTE {num_questions} perguntas, nem mais nem menos
+    - NUNCA duplique perguntas ou conteúdo
+    - Cada pergunta deve ser única e diferente das outras
 
     """
