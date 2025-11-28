@@ -44,6 +44,37 @@ class QuizAgent:
             response_text = response_text.split("```")[1].split("```")[0].strip()
         
         try:
-            return json.loads(response_text)
+            parsed_response = json.loads(response_text)
+            
+            # Validar estrutura básica
+            if "perguntas" not in parsed_response:
+                raise ValueError("Resposta não contém campo 'perguntas'")
+            
+            questions = parsed_response["perguntas"]
+            
+            # Validar número de questões
+            if len(questions) != num_questions:
+                raise ValueError(f"Esperado {num_questions} questões, mas recebeu {len(questions)}")
+            
+            # Validar questões únicas
+            questions_text = [q.get("pergunta", "").strip().lower() for q in questions]
+            if len(questions_text) != len(set(questions_text)):
+                raise ValueError("Questões duplicadas detectadas na resposta do LLM")
+            
+            # Validar número de alternativas por questão
+            for i, question in enumerate(questions):
+                if "alternativas" not in question:
+                    raise ValueError(f"Questão {i+1} não contém alternativas")
+                
+                alternatives = question["alternativas"]
+                if len(alternatives) != num_alternatives:
+                    raise ValueError(f"Questão {i+1}: esperado {num_alternatives} alternativas, mas recebeu {len(alternatives)}")
+                
+                # Verificar se há exatamente uma alternativa correta
+                correct_count = sum(1 for alt in alternatives if alt.get("correta", False))
+                if correct_count != 1:
+                    raise ValueError(f"Questão {i+1}: deve ter exatamente 1 alternativa correta, mas tem {correct_count}")
+            
+            return parsed_response
         except json.JSONDecodeError:
             raise ValueError(f"Error parsing response: {response_text}")

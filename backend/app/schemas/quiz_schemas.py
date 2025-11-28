@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class CreateQuizSchema(BaseModel):
@@ -36,4 +36,17 @@ class QuizResponseSchema(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
     
     questions: list[QuestionSchema] = Field(alias="perguntas")
+    
+    @field_validator('questions')
+    @classmethod
+    def validate_unique_questions(cls, v):
+        if not v:
+            raise ValueError("Lista de questões não pode estar vazia")
+        
+        # Verificar se há questões duplicadas
+        questions_text = [q.question.strip().lower() for q in v]
+        if len(questions_text) != len(set(questions_text)):
+            raise ValueError("Questões duplicadas detectadas")
+        
+        return v
 
