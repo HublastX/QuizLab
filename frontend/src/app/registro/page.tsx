@@ -4,7 +4,11 @@ import { useEffect, useState, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hook/useAuth";
 import { Button } from "@/components/ui/button";
-import { BsArrowDown, BsArrowLeft, BsArrowReturnLeft, BsArrowUp } from "react-icons/bs";
+import { 
+  BsArrowDown, 
+  BsArrowUp, 
+  BsArrowReturnLeft 
+} from "react-icons/bs";
 
 export default function Registro() {
   const { register, loading, error, clearError } = useAuth();
@@ -16,6 +20,9 @@ export default function Registro() {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+
+  // ordem dos campos para navegar
+  const refs = [nameRef, emailRef, passwordRef, buttonRef];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,54 +36,40 @@ export default function Registro() {
     }
   };
 
+  // ----- NAVEGAÇÃO POR TECLAS -----
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Seta para cima - foca no nome
+      const currentIndex = refs.findIndex(r => r.current === document.activeElement);
+
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        const next = refs[currentIndex + 1] ?? refs[0];
+        next.current?.focus();
+      }
+
       if (e.key === "ArrowUp") {
         e.preventDefault();
-        nameRef.current?.focus();
+        const prev = refs[currentIndex - 1] ?? refs[refs.length - 1];
+        prev.current?.focus();
       }
-      // Seta para direita - navega entre campos
-      else if (e.key === "ArrowRight") {
+
+      if (e.key === "Enter") {
         e.preventDefault();
-        if (document.activeElement === nameRef.current) {
-          emailRef.current?.focus();
-        } else if (document.activeElement === emailRef.current) {
-          passwordRef.current?.focus();
-        } else {
-          nameRef.current?.focus();
-        }
-      }
-      // Seta para baixo - navega entre campos
-      else if (e.key === "ArrowDown") {
-        e.preventDefault();
-        if (document.activeElement === nameRef.current) {
-          emailRef.current?.focus();
-        } else if (document.activeElement === emailRef.current) {
-          passwordRef.current?.focus();
-        } else {
-          nameRef.current?.focus();
-        }
-      }
-      // Enter - submete o formulário
-      else if (e.key === "Enter") {
-        e.preventDefault();
-        if (!loading) {
-          buttonRef.current?.click();
-        }
+        buttonRef.current?.click();
       }
     };
 
     document.addEventListener("keydown", handleKeyDown);
-    
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [loading]);
 
   return (
     <div className="flex flex-col items-center justify-center">
       <h1 className="text-6xl font-black">Cadastrar-se</h1>
+
+      <p className="mt-2 opacity-70 text-sm">
+        Use as setas <strong>↑</strong> e <strong>↓</strong> para navegar entre os campos.
+      </p>
       
       <form
         onSubmit={handleSubmit}
@@ -88,6 +81,7 @@ export default function Registro() {
           </div>
         )}
         
+        {/* Nome */}
         <div className="grid grid-cols-1 gap-2">
           <label htmlFor="name">Nome</label>
           <Input
@@ -97,11 +91,12 @@ export default function Registro() {
             onChange={(e) => setName(e.target.value)}
             disabled={loading}
             ref={nameRef}
-            suffix={<BsArrowUp />}
+            suffix={<BsArrowDown />}
             required
           />
         </div>
         
+        {/* Email */}
         <div className="grid grid-cols-1 gap-2">
           <label htmlFor="email">Email</label>
           <Input
@@ -111,11 +106,17 @@ export default function Registro() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={loading}
-            suffix={<BsArrowDown />}
+            suffix={
+              <div className="flex gap-1">
+                <BsArrowUp />
+                <BsArrowDown />
+              </div>
+            }
             required
           />
         </div>
         
+        {/* Senha */}
         <div className="grid grid-cols-1 gap-2">
           <label htmlFor="password">Senha</label>
           <Input
@@ -125,15 +126,15 @@ export default function Registro() {
             ref={passwordRef}
             onChange={(e) => setPassword(e.target.value)}
             disabled={loading}
-            suffix={<BsArrowLeft />}
+            suffix={<BsArrowUp />}
             required
           />
         </div>
         
-        <Button 
+        <Button
           ref={buttonRef}
-          type="submit" 
-          disabled={loading} 
+          type="submit"
+          disabled={loading}
           className="mt-4 hover:bg-qorange-500"
           suffix={<BsArrowReturnLeft />}
         >

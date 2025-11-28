@@ -62,6 +62,9 @@ export default function Login() {
             {loading && <p>Carregando...</p>}
             {error && <p className="text-red-500">Erro: {error}</p>}
             <h1 className="text-6xl font-black">Login</h1>
+            <p className="mt-2 opacity-70 text-sm">
+                Use as setas <strong>↑</strong> e <strong>↓</strong> para navegar entre os campos.
+            </p>
             <form
                 onSubmit={handleSubmit}
                 className="grid grid-cols-1 gap-4 mt-5 w-1/2 bg-layout-card p-6 rounded-lg"

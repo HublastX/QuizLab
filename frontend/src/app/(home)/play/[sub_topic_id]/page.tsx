@@ -164,64 +164,151 @@ export default function SubTopicPlayPage() {
     // Tela de resultados
     if (showResults) {
         const score = calculateScore();
+        
+        const getFeedbackMessage = (percentage: number) => {
+            if (percentage === 100) return { title: "Perfeito!", message: "Você dominou este assunto!" };
+            if (percentage >= 80) return { title: "Excelente!", message: "Você tem um ótimo conhecimento!" };
+            if (percentage >= 60) return { title: "Muito Bom!", message: "Você está no caminho certo!" };
+            if (percentage >= 40) return { title: "Bom esforço!", message: "Continue estudando para melhorar." };
+            return { title: "Continue Tentando!", message: "Não desista, a prática leva à perfeição." };
+        };
+
+        const feedback = getFeedbackMessage(score.percentage);
+
         return (
             <div className="p-6 max-w-4xl mx-auto">
-                <div className="bg-layout-card rounded-lg p-8 border">
-                    <h1 className="text-3xl font-bold mb-6 text-center">
-                        Quiz Concluído! 🎉
-                    </h1>
+                <div className="bg-layout-card rounded-2xl p-8 border shadow-sm">
+                    {/* Hero Section */}
+                    <div className="text-center mb-10">
+                        <h1 className="text-4xl font-bold mb-2 text-foreground">
+                            {feedback.title}
+                        </h1>
+                        <p className="text-gray-600 text-lg mb-8">
+                            {feedback.message}
+                        </p>
 
-                    <div className="mb-8 text-center">
-                        <div className="inline-block bg-blue-100 rounded-full p-8 mb-4">
-                            <div className="text-5xl font-bold text-blue-600">
-                                {score.percentage}%
+                        <div className="relative inline-flex items-center justify-center">
+                            <svg className="w-48 h-48 transform -rotate-90">
+                                <circle
+                                    className="text-gray-200"
+                                    strokeWidth="12"
+                                    stroke="currentColor"
+                                    fill="transparent"
+                                    r="88"
+                                    cx="96"
+                                    cy="96"
+                                />
+                                <circle
+                                    className={`${
+                                        score.percentage >= 70 ? "text-badge-success" : 
+                                        score.percentage >= 40 ? "text-qyellow-500" : "text-badge-error"
+                                    } transition-all duration-1000 ease-out`}
+                                    strokeWidth="12"
+                                    strokeDasharray={2 * Math.PI * 88}
+                                    strokeDashoffset={2 * Math.PI * 88 * (1 - score.percentage / 100)}
+                                    strokeLinecap="round"
+                                    stroke="currentColor"
+                                    fill="transparent"
+                                    r="88"
+                                    cx="96"
+                                    cy="96"
+                                />
+                            </svg>
+                            <div className="absolute flex flex-col items-center">
+                                <span className="text-5xl font-bold text-foreground">
+                                    {score.percentage}%
+                                </span>
+                                <span className="text-sm text-gray-500 font-medium uppercase tracking-wider mt-1">
+                                    Acerto
+                                </span>
                             </div>
                         </div>
-                        <p className="text-xl text-gray-700">
-                            Você acertou {score.correct} de {score.total}{" "}
-                            questões
-                        </p>
+                    </div>
+
+                    {/* Stats Grid */}
+                    <div className="grid grid-cols-3 gap-4 mb-10">
+                        <div className="bg-badge-success/10 border border-badge-success/20 rounded-xl p-4 text-center">
+                            <div className="text-badge-success font-bold text-2xl mb-1">{score.correct}</div>
+                            <div className="text-badge-success font-medium text-sm">Acertos</div>
+                        </div>
+                        <div className="bg-badge-error/10 border border-badge-error/20 rounded-xl p-4 text-center">
+                            <div className="text-badge-error font-bold text-2xl mb-1">{score.total - score.correct}</div>
+                            <div className="text-badge-error font-medium text-sm">Erros</div>
+                        </div>
+                        <div className="bg-qblue-default/10 border border-qblue-default/20 rounded-xl p-4 text-center">
+                            <div className="text-qblue-default font-bold text-2xl mb-1">{score.total}</div>
+                            <div className="text-qblue-default font-medium text-sm">Total</div>
+                        </div>
                     </div>
 
                     {/* Resumo das questões */}
-                    <div className="space-y-4 mb-8">
-                        <h2 className="text-xl font-semibold mb-4">
-                            Resumo das Respostas
+                    <div className="space-y-6 mb-10">
+                        <h2 className="text-xl font-bold text-foreground border-b pb-2 mb-4">
+                            Revisão Detalhada
                         </h2>
                         {questions.map((question, idx) => {
                             const state = questionStates[idx];
+                            const isCorrect = state.isCorrect;
+                            
                             return (
                                 <div
                                     key={idx}
-                                    className={`p-4 rounded-lg border-2 ${
-                                        state.isCorrect
-                                            ? "bg-green-50 border-green-300"
-                                            : "bg-red-50 border-red-300"
-                                    }`}
+                                    className="bg-layout-card rounded-xl border p-6"
                                 >
-                                    <div className="flex items-start gap-3">
+                                    <div className="flex items-start gap-4">
                                         <div
-                                            className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold ${
-                                                state.isCorrect
-                                                    ? "bg-green-500 text-white"
-                                                    : "bg-red-500 text-white"
+                                            className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold text-white shadow-sm ${
+                                                isCorrect
+                                                    ? "bg-badge-success"
+                                                    : "bg-badge-error"
                                             }`}
                                         >
-                                            {state.isCorrect ? "✓" : "✗"}
+                                            {isCorrect ? (
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
+                                                </svg>
+                                            ) : (
+                                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            )}
                                         </div>
                                         <div className="flex-1">
-                                            <p className="font-medium mb-1">
-                                                Questão {idx + 1}:{" "}
+                                            <div className="flex justify-between items-start mb-2">
+                                                <h3 className="font-semibold text-foreground text-lg">
+                                                    Questão {idx + 1}
+                                                </h3>
+                                            </div>
+                                            
+                                            <p className="text-foreground mb-4 text-base leading-relaxed">
                                                 {question.text}
                                             </p>
-                                            <p className="text-sm text-gray-600">
-                                                Sua resposta:{" "}
-                                                {state.selectedAnswer !== null
-                                                    ? question.alternatives[
-                                                          state.selectedAnswer
-                                                      ].text
-                                                    : "Não respondida"}
-                                            </p>
+                                            
+                                            <div className="space-y-2">
+                                                {/* Resposta do usuário */}
+                                                <div className={`p-3 rounded-lg border-2 ${
+                                                    isCorrect 
+                                                        ? "bg-badge-success/40 border-badge-success" 
+                                                        : "bg-badge-error/40 border-badge-error"
+                                                }`}>
+                                                    <p className="text-sm font-medium mb-1">Sua resposta:</p>
+                                                    <p className="text-foreground">
+                                                        {state.selectedAnswer !== null
+                                                            ? question.alternatives[state.selectedAnswer].text
+                                                            : "Não respondida"}
+                                                    </p>
+                                                </div>
+
+                                                {/* Resposta correta (se errou) */}
+                                                {!isCorrect && (
+                                                    <div className="p-3 rounded-lg border-2 bg-badge-success/40 border-badge-success">
+                                                        <p className="text-sm font-medium mb-1">Resposta correta:</p>
+                                                        <p className="text-foreground">
+                                                            {question.alternatives.find(a => a.correct)?.text}
+                                                        </p>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -229,13 +316,14 @@ export default function SubTopicPlayPage() {
                         })}
                     </div>
 
-                    <div className="flex gap-4 justify-center">
-                        <Button onClick={handleRestartQuiz} >
+                    <div className="flex gap-4 justify-center pt-4 border-t">
+                        <Button onClick={handleRestartQuiz} className="px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all">
                             Refazer Quiz
                         </Button>
                         <Button
                             onClick={() => router.back()}
                             variant="subtle"
+                            className="px-8 py-6 text-lg"
                         >
                             Voltar
                         </Button>
@@ -257,19 +345,19 @@ export default function SubTopicPlayPage() {
             <div className="mb-6">
                 <div className="flex justify-between items-center mb-2">
                     <h1 className="text-2xl font-bold">Quiz</h1>
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm ">
                         {questionStates.filter((s) => s.isAnswered).length} de{" "}
                         {questions.length} respondidas
                     </div>
                 </div>
-                <p className="text-gray-600 mb-4">
+                <p className=" mb-4">
                     Questão {currentQuestionIndex + 1} de {questions.length}
                 </p>
 
                 {/* Barra de progresso */}
                 <div className="w-full bg-gray-200 rounded-full h-2">
                     <div
-                        className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                        className="bg-gradient-to-r from-qorange-default to-qblue-default h-2 rounded-full transition-all duration-300"
                         style={{
                             width: `${
                                 ((currentQuestionIndex + 1) /
@@ -306,12 +394,12 @@ export default function SubTopicPlayPage() {
                                 disabled={currentState.isAnswered}
                                 className={`w-full text-left p-4 border-2 rounded-lg transition-all ${
                                     showCorrect
-                                        ? "bg-green-50 border-green-500"
+                                        ? "bg-badge-success/40 border-badge-success"
                                         : showIncorrect
-                                        ? "bg-red-50 border-red-500"
+                                        ? "bg-badge-error/40 border-badge-error"
                                         : isSelected
-                                        ? "bg-blue-50 border-blue-500"
-                                        : "border-gray-300 hover:bg-blue-50 hover:border-blue-300"
+                                        ? "bg-qblue-default/40 border-qblue-default"
+                                        : "border-gray-300 hover:bg-qblue-default/40 hover:border-qblue-default"
                                 } ${
                                     currentState.isAnswered
                                         ? "cursor-not-allowed"
@@ -322,11 +410,11 @@ export default function SubTopicPlayPage() {
                                     <div
                                         className={`shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center mt-0.5 ${
                                             showCorrect
-                                                ? "bg-green-500 border-green-500 text-white"
+                                                ? "bg-badge-success/40 border-badge-success "
                                                 : showIncorrect
-                                                ? "bg-red-500 border-red-500 text-white"
+                                                ? "bg-badge-error/40 border-badge-error "
                                                 : isSelected
-                                                ? "bg-blue-500 border-blue-500 text-white"
+                                                ? "bg-qblue-default/40 border-qblue-default "
                                                 : "border-gray-400"
                                         }`}
                                     >
@@ -344,7 +432,7 @@ export default function SubTopicPlayPage() {
                                         </p>
                                         {currentState.isAnswered &&
                                             (isCorrectAnswer || isSelected) && (
-                                                <p className="text-sm mt-2 text-gray-700">
+                                                <p className="text-sm mt-2 ">
                                                     <span className="font-semibold">
                                                         Explicação:{" "}
                                                     </span>
@@ -389,14 +477,14 @@ export default function SubTopicPlayPage() {
                                 onClick={() => setCurrentQuestionIndex(idx)}
                                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${
                                     idx === currentQuestionIndex
-                                        ? "bg-blue-600 text-white ring-2 ring-blue-300"
+                                        ? "bg-qblue-default/60 ring-2 ring-qblue-default"
                                         : state.isAnswered
                                         ? state.isCorrect
-                                            ? "bg-green-500 text-white"
-                                            : "bg-red-500 text-white"
+                                            ? "bg-badge-success text-white"
+                                            : "bg-badge-error text-white"
                                         : state.selectedAnswer !== null
-                                        ? "bg-blue-300 text-white"
-                                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                                        ? "bg-qblue-default/60 text-white"
+                                        : "bg-qorange-default/40 hover:bg-qorange-default"
                                 }`}
                             >
                                 {state.isAnswered ? (

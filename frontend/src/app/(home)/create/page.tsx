@@ -48,6 +48,10 @@ export default function CreateQuiz() {
   const [automaticData, setAutomaticData] = useState<AutomaticModeData | null>(null);
   const [saving, setSaving] = useState(false);
 
+  // New state for duplicate prevention
+  const [generatedQuestions, setGeneratedQuestions] = useState<QuestionData[] | null>(null);
+  const [savedIndices, setSavedIndices] = useState<Set<number>>(new Set());
+
   const { createTheme } = useTheme();
   const { createSubTopic } = useSubTopic();
   const { createQuestion } = useQuestion();
@@ -116,6 +120,8 @@ export default function CreateQuiz() {
           description: themeData.description,
         });
         themeId = newTheme.id;
+        // Atualiza o estado para não criar novamente em caso de retry
+        setThemeData(prev => prev ? { ...prev, id: themeId, isNew: false } : null);
       }
 
       // 2. Cria ou pega o subtopic
@@ -127,59 +133,60 @@ export default function CreateQuiz() {
           theme_id: themeId!,
         });
         subTopicId = newSubTopic.id;
+        // Atualiza o estado para não criar novamente em caso de retry
+        setSubtopicData(prev => prev ? { ...prev, id: subTopicId, isNew: false } : null);
       }
 
       // 3. Gera ou salva as questões
       if (isAutomatic && automaticData) {
-        let generatedQuestions: QuestionData[] = [];
-        let response;
+        // Modo automático: apenas chama a API do quiz que já salva as questões
+        if (!generatedQuestions) {
+          let response;
 
-        if (automaticData.mode === "text" && automaticData.text) {
-          response = await createQuizFromText({
-            text: automaticData.text,
-            num_questions: automaticData.num_questions,
-            num_alternatives: automaticData.num_alternatives,
-            theme_id: themeId!,
-            sub_topic_id: subTopicId!
-          });
-        } else if (automaticData.mode === "audio" && automaticData.file) {
-          response = await createQuizFromAudio({
-            file: automaticData.file,
-            num_questions: automaticData.num_questions,
-            num_alternatives: automaticData.num_alternatives,
-            theme_id: themeId!,
-            sub_topic_id: subTopicId!
-          });
-        } else if (automaticData.mode === "document" && automaticData.file) {
-          response = await createQuizFromDocument({
-            file: automaticData.file,
-            num_questions: automaticData.num_questions,
-            num_alternatives: automaticData.num_alternatives,
-            theme_id: themeId!,
-            sub_topic_id: subTopicId!
-          });
-        }
-
-        if (response && response.perguntas) {
-          generatedQuestions = convertQuizToQuestions(response.perguntas);
-          
-          // Salva as questões geradas no banco
-          for (const question of generatedQuestions) {
-            await createQuestion({
-              text: question.text,
-              sub_topic_id: subTopicId!,
-              alternatives: question.alternatives,
+          if (automaticData.mode === "text" && automaticData.text) {
+            response = await createQuizFromText({
+              text: automaticData.text,
+              num_questions: automaticData.num_questions,
+              num_alternatives: automaticData.num_alternatives,
+              theme_id: themeId!,
+              sub_topic_id: subTopicId!
+            });
+          } else if (automaticData.mode === "audio" && automaticData.file) {
+            response = await createQuizFromAudio({
+              file: automaticData.file,
+              num_questions: automaticData.num_questions,
+              num_alternatives: automaticData.num_alternatives,
+              theme_id: themeId!,
+              sub_topic_id: subTopicId!
+            });
+          } else if (automaticData.mode === "document" && automaticData.file) {
+            response = await createQuizFromDocument({
+              file: automaticData.file,
+              num_questions: automaticData.num_questions,
+              num_alternatives: automaticData.num_alternatives,
+              theme_id: themeId!,
+              sub_topic_id: subTopicId!
             });
           }
+
+          if (response && response.perguntas) {
+            setGeneratedQuestions(convertQuizToQuestions(response.perguntas));
+          }
         }
+        // Não precisa fazer POST para /api/questions - a API do quiz já salvou
       } else {
         // Salva as questões manuais
-        for (const question of questionsData) {
+        for (let i = 0; i < questionsData.length; i++) {
+          if (savedIndices.has(i)) continue;
+
+          const question = questionsData[i];
           await createQuestion({
             text: question.text,
             sub_topic_id: subTopicId!,
             alternatives: question.alternatives,
           });
+
+          setSavedIndices(prev => new Set(prev).add(i));
         }
       }
 
