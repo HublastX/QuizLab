@@ -75,13 +75,13 @@ export default function PlayPage() {
 
     return (
         <div className="min-h-screen">
-            <div className="max-w-7xl">
+            <div>
                 {/* Header */}
                 <div className="mb-8">
-                    <h1 className="text-3xl lg:text-4xl font-bold text-foreground">
+                    <h1 className="text-3xl lg:text-4xl font-bold">
                         Jogar Quiz
                     </h1>
-                    <p className="mt-2 text-muted-foreground">
+                    <p className="mt-2">
                         Selecione um tema para começar a jogar
                     </p>
                 </div>
@@ -89,7 +89,7 @@ export default function PlayPage() {
                 {error && !selectedTheme ? (
                     <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4 mb-6">
                         <p className="text-destructive">Erro: {error}</p>
-                        <Button 
+                        <Button
                             onClick={() => window.location.reload()} 
                             variant="subtle" 
                             className="mt-2"
@@ -99,7 +99,7 @@ export default function PlayPage() {
                     </div>
                 ) : null}
 
-                <div className="flex flex-col lg:flex-row gap-6">
+                <div className="flex flex-col lg:flex-row gap-6 w-full">
                     {/* Lista de Temas - Conteúdo Principal */}
                     <div className="flex-1">
                         {themes.length === 0 ? (
@@ -109,7 +109,7 @@ export default function PlayPage() {
                                 </p>
                             </div>
                         ) : (
-                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
                                 {themes.map((theme) => (
                                     <button
                                         key={theme.id}
@@ -146,7 +146,7 @@ export default function PlayPage() {
 
                     {/* Painel Lateral de Subtópicos */}
                     {selectedTheme && (
-                        <div className="lg:w-96 w-full bg-card border rounded-xl shadow-lg flex flex-col max-h-[calc(100vh-200px)] lg:max-h-[80vh] lg:absolute lg:right-6 lg:top-24">
+                        <div className="lg:w-96 w-full bg-layout-card border rounded-xl shadow-lg flex flex-col max-h-[calc(100vh-200px)] lg:max-h-[80vh]">
                             {/* Header do Painel */}
                             <div className="p-6 border-b flex items-start justify-between bg-muted/10 rounded-t-xl">
                                 <div className="flex-1 pr-4">
@@ -218,10 +218,10 @@ export default function PlayPage() {
                                                         </Button>
                                                     </Link>
                                                     <Link
-                                                        href={`/teste/question?subTopic=${subTopic.id}`}
+                                                        href={`/play/${subTopic.id}/questions`}
                                                         className="flex-1"
                                                     >
-                                                      <Button
+                                                        <Button
                                                             size="sm"
                                                             variant="subtle"
                                                             className="w-full text-xs"
