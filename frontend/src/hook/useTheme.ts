@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Theme, CreateThemeRequest, UseThemeReturn } from "@/util/types/theme";
+import { Theme, CreateThemeRequest, UpdateThemeRequest, UseThemeReturn } from "@/util/types/theme";
 import { BASE_PATH } from "@/lib/constants";
 
 export const useTheme = (): UseThemeReturn => {
@@ -107,6 +107,47 @@ export const useTheme = (): UseThemeReturn => {
     }
   };
 
+  const updateTheme = async (themeId: string, themeData: UpdateThemeRequest): Promise<Theme> => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const data = await fetchWithAuth(`/api/themes/${themeId}`, {
+        method: "PATCH",
+        body: JSON.stringify(themeData),
+      });
+      
+      setThemes((prev) => prev.map((t) => (t.id === themeId ? data : t)));
+      return data;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Erro ao atualizar theme";
+      setError(errorMessage);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteTheme = async (themeId: string): Promise<string> => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const data = await fetchWithAuth(`/api/themes/${themeId}`, {
+        method: "DELETE",
+      });
+      
+      setThemes((prev) => prev.filter((t) => t.id !== themeId));
+      return data.message;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Erro ao deletar theme";
+      setError(errorMessage);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const clearError = (): void => {
     setError(null);
   };
@@ -118,6 +159,8 @@ export const useTheme = (): UseThemeReturn => {
     getThemes,
     getThemeById,
     createTheme,
+    updateTheme,
+    deleteTheme,
     clearError,
   };
 };

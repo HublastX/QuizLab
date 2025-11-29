@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { SubTopic, CreateSubTopicRequest, UseSubTopicReturn } from "@/util/types/subTopic";
+import { SubTopic, CreateSubTopicRequest, UpdateSubTopicRequest, UseSubTopicReturn } from "@/util/types/subTopic";
 import { BASE_PATH } from "@/lib/constants";
 
 export const useSubTopic = (): UseSubTopicReturn => {
@@ -107,6 +107,47 @@ export const useSubTopic = (): UseSubTopicReturn => {
     }
   };
 
+  const updateSubTopic = async (subTopicId: string, subTopicData: UpdateSubTopicRequest): Promise<SubTopic> => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const data = await fetchWithAuth(`/api/sub-topics/${subTopicId}`, {
+        method: "PATCH",
+        body: JSON.stringify(subTopicData),
+      });
+      
+      setSubTopics((prev) => prev.map((st) => (st.id === subTopicId ? data : st)));
+      return data;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Erro ao atualizar sub-topic";
+      setError(errorMessage);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteSubTopic = async (subTopicId: string): Promise<string> => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const data = await fetchWithAuth(`/api/sub-topics/${subTopicId}`, {
+        method: "DELETE",
+      });
+      
+      setSubTopics((prev) => prev.filter((st) => st.id !== subTopicId));
+      return data.message;
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Erro ao deletar sub-topic";
+      setError(errorMessage);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const clearError = (): void => {
     setError(null);
   };
@@ -118,6 +159,8 @@ export const useSubTopic = (): UseSubTopicReturn => {
     getSubTopicById,
     getSubTopicsByTheme,
     createSubTopic,
+    updateSubTopic,
+    deleteSubTopic,
     clearError,
   };
 };

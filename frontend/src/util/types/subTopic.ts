@@ -13,6 +13,12 @@ export interface CreateSubTopicRequest {
   theme_id: string;
 }
 
+export interface UpdateSubTopicRequest {
+  sub_topic?: string;
+  description?: string;
+  theme_id?: string;
+}
+
 export interface UseSubTopicReturn {
   subTopics: SubTopic[];
   loading: boolean;
@@ -20,5 +26,7 @@ export interface UseSubTopicReturn {
   getSubTopicById: (subTopicId: string) => Promise<SubTopic>;
   getSubTopicsByTheme: (themeId: string) => Promise<SubTopic[]>;
   createSubTopic: (data: CreateSubTopicRequest) => Promise<SubTopic>;
+  updateSubTopic: (subTopicId: string, data: UpdateSubTopicRequest) => Promise<SubTopic>;
+  deleteSubTopic: (subTopicId: string) => Promise<string>;
   clearError: () => void;
 }

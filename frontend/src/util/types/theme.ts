@@ -12,6 +12,11 @@ export interface CreateThemeRequest {
   description: string;
 }
 
+export interface UpdateThemeRequest {
+  title?: string;
+  description?: string;
+}
+
 export interface UseThemeReturn {
   themes: Theme[];
   loading: boolean;
@@ -19,5 +24,7 @@ export interface UseThemeReturn {
   getThemes: () => Promise<Theme[]>;
   getThemeById: (themeId: string) => Promise<Theme>;
   createTheme: (data: CreateThemeRequest) => Promise<Theme>;
+  updateTheme: (themeId: string, data: UpdateThemeRequest) => Promise<Theme>;
+  deleteTheme: (themeId: string) => Promise<string>;
   clearError: () => void;
 }
