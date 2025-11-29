@@ -1,8 +1,4 @@
-export interface Alternative {
-  text: string;
-  correct: boolean;
-  explanation: string;
-}
+import { Alternative } from "./alternative";
 
 export interface Question {
   id: string;
@@ -16,7 +12,7 @@ export interface Question {
 export interface CreateQuestionRequest {
   text: string;
   sub_topic_id: string;
-  alternatives: Alternative[];
+  alternatives: Omit<Alternative, "id" | "question_id">[];
 }
 
 export interface UpdateQuestionRequest {

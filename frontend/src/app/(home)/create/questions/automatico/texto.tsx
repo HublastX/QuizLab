@@ -1,16 +1,21 @@
 // /create/question/automatico/texto.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { useFormNavigation } from "@/hook/useFormNavigation";
 
 interface TextoProps {
     onDataChange: (data: { text: string; num_questions: number; num_alternatives: number } | null) => void;
+    onSubmit?: () => void;
 }
 
-export function Texto({ onDataChange }: TextoProps) {
+export function Texto({ onDataChange, onSubmit }: TextoProps) {
     const [text, setText] = useState("");
     const [numQuestions, setNumQuestions] = useState(5);
     const [numAlternatives, setNumAlternatives] = useState(4);
+
+    const formRef = useRef<HTMLDivElement>(null);
+    useFormNavigation(formRef, { enabled: true, onSubmit });
 
     // Atualiza os dados sempre que algo mudar
     const updateData = (newText: string, newNumQuestions: number, newNumAlternatives: number) => {
@@ -41,7 +46,7 @@ export function Texto({ onDataChange }: TextoProps) {
     };
 
     return (
-        <div className="max-w-4xl mx-auto">
+        <div ref={formRef} className="max-w-4xl mx-auto">
             <div className="mb-6">
                 <h3 className="text-xl font-bold mb-2">Texto Base</h3>
                 <p className="text-gray-600">

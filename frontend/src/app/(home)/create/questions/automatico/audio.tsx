@@ -1,16 +1,21 @@
 // /create/question/automatico/audio.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { useFormNavigation } from "@/hook/useFormNavigation";
 
 interface AudioProps {
     onDataChange: (data: { file: File; num_questions: number; num_alternatives: number } | null) => void;
+    onSubmit?: () => void;
 }
 
-export function Audio({ onDataChange }: AudioProps) {
+export function Audio({ onDataChange, onSubmit }: AudioProps) {
     const [audioFile, setAudioFile] = useState<File | null>(null);
     const [numQuestions, setNumQuestions] = useState(5);
     const [numAlternatives, setNumAlternatives] = useState(4);
+
+    const formRef = useRef<HTMLDivElement>(null);
+    useFormNavigation(formRef, { enabled: true, onSubmit });
 
     const updateData = (file: File | null, newNumQuestions: number, newNumAlternatives: number) => {
         if (file && newNumQuestions >= 1 && newNumQuestions <= 50 && newNumAlternatives >= 2 && newNumAlternatives <= 6) {
@@ -53,7 +58,7 @@ export function Audio({ onDataChange }: AudioProps) {
     };
 
     return (
-        <div className="max-w-4xl mx-auto">
+        <div ref={formRef} className="max-w-4xl mx-auto">
             <div className="mb-6">
                 <h3 className="text-xl font-bold mb-2">Arquivo de Áudio</h3>
                 <p className="text-gray-600">

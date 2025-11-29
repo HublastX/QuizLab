@@ -207,6 +207,7 @@ export default function CreateQuiz() {
         <SetQuiz
           onThemeChange={setThemeData}
           onSubtopicChange={setSubtopicData}
+          onSubmit={handleNext}
         />
       )}
       
@@ -218,6 +219,7 @@ export default function CreateQuiz() {
           questions={questionsData}
           themeId={themeData?.id || ""}
           subTopicId={subtopicData?.id || ""}
+          onSubmit={handleFinish}
         />
       )}
 

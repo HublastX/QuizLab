@@ -14,6 +14,7 @@ interface QuestionsProps {
   questions: QuestionData[];
   themeId: string;
   subTopicId: string;
+  onSubmit?: () => void;
 }
 
 export default function Questions({
@@ -23,6 +24,7 @@ export default function Questions({
   questions,
   themeId,
   subTopicId,
+  onSubmit,
 }: QuestionsProps) {
   const [mode, setMode] = useState<"manual" | "automatic">("manual");
 
@@ -65,6 +67,7 @@ export default function Questions({
             <ManualQuestions
               onQuestionsChange={onQuestionsChange}
               questions={questions}
+              onSubmit={onSubmit}
             />
           ) : (
             <AutomaticQuestions

@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { QuestionData } from "../page";
+import { useFormNavigation } from "@/hook/useFormNavigation";
 
 interface ManualQuestionsProps {
     onQuestionsChange: (questions: QuestionData[]) => void;
     questions: QuestionData[];
+    onSubmit?: () => void;
 }
 
 interface Alternative {
@@ -19,12 +21,16 @@ interface Alternative {
 export default function ManualQuestions({
     onQuestionsChange,
     questions,
+    onSubmit,
 }: ManualQuestionsProps) {
     const [questionText, setQuestionText] = useState("");
     const [alternatives, setAlternatives] = useState<Alternative[]>([
         { text: "", correct: false, explanation: "" },
         { text: "", correct: false, explanation: "" },
     ]);
+
+    const formRef = useRef<HTMLDivElement>(null);
+    useFormNavigation(formRef, { enabled: true, onSubmit });
 
     const addAlternative = () => {
         setAlternatives([
@@ -102,7 +108,7 @@ export default function ManualQuestions({
     };
 
     return (
-        <div className="w-full flex flex-col lg:flex-row gap-8 h-full overflow-hidden">
+        <div ref={formRef} className="w-full flex flex-col lg:flex-row gap-8 h-full overflow-hidden">
             {/* Coluna do formulário */}
             <div className="flex-1">
                 <div className="w-full overflow-auto">

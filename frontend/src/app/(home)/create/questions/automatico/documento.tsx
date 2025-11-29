@@ -1,16 +1,21 @@
 // /create/question/automatico/documento.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { useFormNavigation } from "@/hook/useFormNavigation";
 
 interface DocumentoProps {
     onDataChange: (data: { file: File; num_questions: number; num_alternatives: number } | null) => void;
+    onSubmit?: () => void;
 }
 
-export function Documento({ onDataChange }: DocumentoProps) {
+export function Documento({ onDataChange, onSubmit }: DocumentoProps) {
     const [documentFile, setDocumentFile] = useState<File | null>(null);
     const [numQuestions, setNumQuestions] = useState(5);
     const [numAlternatives, setNumAlternatives] = useState(4);
+
+    const formRef = useRef<HTMLDivElement>(null);
+    useFormNavigation(formRef, { enabled: true, onSubmit });
 
     const updateData = (file: File | null, newNumQuestions: number, newNumAlternatives: number) => {
         if (file && newNumQuestions >= 1 && newNumQuestions <= 50 && newNumAlternatives >= 2 && newNumAlternatives <= 6) {
@@ -81,7 +86,7 @@ export function Documento({ onDataChange }: DocumentoProps) {
     };
 
     return (
-        <div className="max-w-4xl mx-auto">
+        <div ref={formRef} className="max-w-4xl mx-auto">
             <div className="mb-6">
                 <h3 className="text-xl font-bold mb-2">Arquivo de Documento</h3>
                 <p className="text-gray-600">

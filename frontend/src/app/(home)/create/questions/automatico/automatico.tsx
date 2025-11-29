@@ -17,9 +17,10 @@ export interface AutomaticModeData {
 
 interface AutomaticQuestionsProps {
     onDataChange: (data: AutomaticModeData | null) => void;
+    onSubmit?: () => void;
 }
 
-export default function AutomaticQuestions({ onDataChange }: AutomaticQuestionsProps) {
+export default function AutomaticQuestions({ onDataChange, onSubmit }: AutomaticQuestionsProps) {
     const [mode, setMode] = useState<GenerationMode>(null);
 
     const handleDataChange = (data: { text?: string; file?: File; num_questions: number; num_alternatives: number } | null) => {
@@ -37,6 +38,7 @@ export default function AutomaticQuestions({ onDataChange }: AutomaticQuestionsP
         return (
             <Texto
                 onDataChange={handleDataChange}
+                onSubmit={onSubmit}
             />
         );
     }
@@ -45,6 +47,7 @@ export default function AutomaticQuestions({ onDataChange }: AutomaticQuestionsP
         return (
             <Documento
                 onDataChange={handleDataChange}
+                onSubmit={onSubmit}
             />
         );
     }
@@ -53,6 +56,7 @@ export default function AutomaticQuestions({ onDataChange }: AutomaticQuestionsP
         return (
             <Audio
                 onDataChange={handleDataChange}
+                onSubmit={onSubmit}
             />
         );
     }

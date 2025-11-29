@@ -21,9 +21,10 @@ interface SubtopicData {
 interface SetQuizProps {
   onThemeChange: (theme: ThemeData | null) => void;
   onSubtopicChange: (subtopic: SubtopicData | null) => void;
+  onSubmit?: () => void;
 }
 
-export default function SetQuiz({ onThemeChange, onSubtopicChange }: SetQuizProps) {
+export default function SetQuiz({ onThemeChange, onSubtopicChange, onSubmit }: SetQuizProps) {
   const [themeData, setThemeData] = useState<ThemeData | null>(null);
 
   const handleThemeChange = (theme: ThemeData | null) => {
@@ -33,13 +34,14 @@ export default function SetQuiz({ onThemeChange, onSubtopicChange }: SetQuizProp
 
   return (
     <div>
-      <Theme onThemeChange={handleThemeChange} />
+      <Theme onThemeChange={handleThemeChange} onSubmit={onSubmit} />
       
       <div className="my-10" />
       
       <Subtopic
         themeId={themeData?.isNew ? undefined : themeData?.id}
         onSubtopicChange={onSubtopicChange}
+        onSubmit={onSubmit}
       />
     </div>
   );
