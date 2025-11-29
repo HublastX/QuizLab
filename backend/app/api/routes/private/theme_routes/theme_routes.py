@@ -47,7 +47,7 @@ def update_theme_route(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    return update_theme(theme_id, theme_update, current_user.id, db)
+    return update_theme(theme_id, current_user.id, theme_update, db)
 
 @router.delete("/{theme_id}")
 def delete_theme_route(
