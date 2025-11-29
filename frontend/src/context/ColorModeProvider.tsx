@@ -82,10 +82,10 @@ export default function ColorModeProvider({
 
         // Escuta mudanças de outras abas
         window.addEventListener("storage", handleStorageChange);
-        
+
         // Escuta mudanças da mesma aba (custom event)
         window.addEventListener("colorModeChange", handleStorageChange);
-        
+
         return () => {
             window.removeEventListener("storage", handleStorageChange);
             window.removeEventListener("colorModeChange", handleStorageChange);

@@ -1,7 +1,12 @@
 "use client";
 
-import {  CiBookmarkPlus, CiUser, CiViewList } from "react-icons/ci";
-import { BsArrowUp, BsArrowDown, BsArrowLeft, BsArrowRight } from "react-icons/bs";
+import { CiBookmarkPlus, CiUser, CiViewList } from "react-icons/ci";
+import {
+    BsArrowUp,
+    BsArrowDown,
+    BsArrowLeft,
+    BsArrowRight,
+} from "react-icons/bs";
 import HomeCard from "./card";
 import Acessibilidade from "./acessibilidade";
 import { useUser } from "@/hook/useUser";
@@ -35,7 +40,7 @@ export default function Home() {
         };
 
         document.addEventListener("keydown", handleKeyDown);
-        
+
         return () => {
             document.removeEventListener("keydown", handleKeyDown);
         };
@@ -48,38 +53,37 @@ export default function Home() {
                     Olá, {user?.name || "Visitante"}!
                 </h1>
                 <div className="grid grid-cols-3 mt-2 gap-6">
-                        <HomeCard
-                            key= {1}
-                            title= "Criar Quiz"
-                            icon= {<CiBookmarkPlus />}
-                            description= "Crie seus próprios quizzes personalizados."
-                            href= "/create"
-                            ariaLabel= "Criar Quiz - Crie seus próprios quizzes personalizados."
-                            color= "create"
-                            cornerIcon={<BsArrowUp />}
-                        />
-                        <HomeCard
-                            key= {3}
-                            title= "Ver Quizzes"
-                            icon= {<CiViewList />}
-                            description= "Veja sua lista de quizzes."
-                            href= "/play"
-                            color= "play"
-                            cornerIcon={<BsArrowDown />}
-                            />
-                        <HomeCard
-                            key= {4}
-                            title= "Perfil"
-                            icon= {<CiUser />}
-                            description= "Acesse e edite seu perfil."
-                            href= "/profile"
-                            color= "ranking"
-                            cornerIcon={<BsArrowRight />}
-                        />
+                    <HomeCard
+                        key={1}
+                        title="Criar Quiz"
+                        icon={<CiBookmarkPlus />}
+                        description="Crie seus próprios quizzes personalizados."
+                        href="/create"
+                        ariaLabel="Criar Quiz - Crie seus próprios quizzes personalizados."
+                        color="create"
+                        cornerIcon={<BsArrowUp />}
+                    />
+                    <HomeCard
+                        key={3}
+                        title="Ver Quizzes"
+                        icon={<CiViewList />}
+                        description="Veja sua lista de quizzes."
+                        href="/play"
+                        color="play"
+                        cornerIcon={<BsArrowDown />}
+                    />
+                    <HomeCard
+                        key={4}
+                        title="Perfil"
+                        icon={<CiUser />}
+                        description="Acesse e edite seu perfil."
+                        href="/profile"
+                        color="ranking"
+                        cornerIcon={<BsArrowRight />}
+                    />
                 </div>
                 <Acessibilidade />
             </div>
-
         </div>
     );
 }

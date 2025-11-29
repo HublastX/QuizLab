@@ -189,16 +189,48 @@ export default function Acessibilidade() {
                         <h2 className="font-semibold mb-3">Daltonismo</h2>
 
                         <div className="flex space-x-4">
-                            <Button size="sm"  className={colorMode === "none" ? 'bg-qorange-default text-qorange-text hover:bg-qorange-hover' : "bg-qblue-default text-qblue-text hover:bg-qblue-hover"} onClick={() => setColorMode("none")}>
+                            <Button
+                                size="sm"
+                                className={
+                                    colorMode === "none"
+                                        ? "bg-qorange-default text-qorange-text hover:bg-qorange-hover"
+                                        : "bg-qblue-default text-qblue-text hover:bg-qblue-hover"
+                                }
+                                onClick={() => setColorMode("none")}
+                            >
                                 Normal
                             </Button>
-                            <Button size="sm"  className={colorMode === "protanopia" ? 'bg-qorange-default text-qorange-text hover:bg-qorange-hover' : "bg-qblue-default text-qblue-text hover:bg-qblue-hover"} onClick={() => setColorMode("protanopia")}>
+                            <Button
+                                size="sm"
+                                className={
+                                    colorMode === "protanopia"
+                                        ? "bg-qorange-default text-qorange-text hover:bg-qorange-hover"
+                                        : "bg-qblue-default text-qblue-text hover:bg-qblue-hover"
+                                }
+                                onClick={() => setColorMode("protanopia")}
+                            >
                                 Protanopia
                             </Button>
-                            <Button size="sm"  className={colorMode === "deuteranopia" ? 'bg-qorange-default text-qorange-text hover:bg-qorange-hover' : "bg-qblue-default text-qblue-text hover:bg-qblue-hover"} onClick={() => setColorMode("deuteranopia")}>
+                            <Button
+                                size="sm"
+                                className={
+                                    colorMode === "deuteranopia"
+                                        ? "bg-qorange-default text-qorange-text hover:bg-qorange-hover"
+                                        : "bg-qblue-default text-qblue-text hover:bg-qblue-hover"
+                                }
+                                onClick={() => setColorMode("deuteranopia")}
+                            >
                                 Deuteranopia
                             </Button>
-                            <Button size="sm"  className={colorMode === "tritanopia" ? 'bg-qorange-default text-qorange-text hover:bg-qorange-hover' : "bg-qblue-default text-qblue-text hover:bg-qblue-hover"} onClick={() => setColorMode("tritanopia")}>
+                            <Button
+                                size="sm"
+                                className={
+                                    colorMode === "tritanopia"
+                                        ? "bg-qorange-default text-qorange-text hover:bg-qorange-hover"
+                                        : "bg-qblue-default text-qblue-text hover:bg-qblue-hover"
+                                }
+                                onClick={() => setColorMode("tritanopia")}
+                            >
                                 Tritanopia
                             </Button>
                         </div>
