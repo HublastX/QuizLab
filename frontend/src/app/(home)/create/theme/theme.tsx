@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, forwardRef, useImperativeHandle } from "react";
 import { Input } from "@/components/ui/input";
 import { useTheme } from "@/hook/useTheme";
 import { useFormNavigation } from "@/hook/useFormNavigation";
@@ -14,9 +14,15 @@ interface ThemeProps {
         isNew: boolean;
     }) => void;
     onSubmit?: () => void;
+    onExitDown?: () => void;
 }
 
-export function Theme({ onThemeChange, onSubmit }: ThemeProps) {
+export interface ThemeRef {
+    focusFirst: () => void;
+    focusLast: () => void;
+}
+
+export const Theme = forwardRef<ThemeRef, ThemeProps>(({ onThemeChange, onSubmit, onExitDown }, ref) => {
     const { themes, loading, getThemes } = useTheme();
 
     const [title, setTitle] = useState("");
@@ -26,7 +32,16 @@ export function Theme({ onThemeChange, onSubmit }: ThemeProps) {
     const formRef = useRef<HTMLDivElement>(null);
 
     // Usa o hook de navegação por teclado
-    useFormNavigation(formRef, { enabled: true, onSubmit });
+    const { focusFirst, focusLast } = useFormNavigation(formRef, { 
+        enabled: true, 
+        onSubmit,
+        onExitDown 
+    });
+
+    useImperativeHandle(ref, () => ({
+        focusFirst,
+        focusLast
+    }));
 
     useEffect(() => {
         getThemes();
@@ -63,10 +78,6 @@ export function Theme({ onThemeChange, onSubmit }: ThemeProps) {
         setSelectedThemeId("");
     };
 
-    const focusFirst = () => {
-        formRef.current?.querySelector<HTMLInputElement>('input')?.focus();
-    };
-
     return (
         <div ref={formRef} className="w-full border rounded-2xl bg-layout-card relative group">
             <div className="border-b p-6 flex justify-between items-start">
@@ -77,14 +88,6 @@ export function Theme({ onThemeChange, onSubmit }: ThemeProps) {
                         Use <strong>↑↓</strong> para navegar, <strong>Enter</strong> para selecionar
                     </p>
                 </div>
-                <button 
-                    onClick={focusFirst}
-                    className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors opacity-50 group-hover:opacity-100"
-                    title="Focar neste bloco"
-                    type="button"
-                >
-                    <BsArrowDown className="text-xl" />
-                </button>
             </div>
 
             <div className="p-6 gap-4 flex flex-col">
@@ -92,6 +95,7 @@ export function Theme({ onThemeChange, onSubmit }: ThemeProps) {
                     <label htmlFor="theme">Tema</label>
                     <Input
                         id="theme"
+                        autoFocus
                         placeholder="Digite o tema do seu quiz"
                         value={title}
                         onChange={(e) => handleTitleChange(e.target.value)}
@@ -143,4 +147,6 @@ export function Theme({ onThemeChange, onSubmit }: ThemeProps) {
             </div>
         </div>
     );
-}
+});
+
+Theme.displayName = "Theme";

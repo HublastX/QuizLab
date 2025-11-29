@@ -173,8 +173,8 @@ export default function PlayPage() {
                     {/* Lista de Temas */}
                     <div className="flex-1">
                         {themes.length === 0 ? (
-                            <div className="text-center py-12 border-2 border-dashed rounded-lg">
-                                <p className="text-muted-foreground">
+                            <div className="text-center py-12 border border-dashed rounded-lg">
+                                <p >
                                     Nenhum tema disponível no momento.
                                 </p>
                             </div>
@@ -211,10 +211,10 @@ export default function PlayPage() {
                                             <>
                                                 <button
                                                     onClick={() => handleSelectTheme(theme)}
-                                                    className={`w-full p-6 rounded-xl border-2 transition-all duration-200 text-left hover:shadow-md hover:scale-[1.02] group ${
+                                                    className={`w-full p-6 rounded-xl border transition-all duration-200 hover:border-2 text-left hover:shadow-md hover:scale-[1.02] group ${
                                                         selectedTheme?.id === theme.id
-                                                            ? "border-primary bg-primary/5 shadow-md"
-                                                            : "border-border bg-card hover:border-primary/50"
+                                                            ? "border-primary border-3 bg-primary/5 shadow-md "
+                                                            : "border bg-card hover:border-primary/50"
                                                     }`}
                                                 >
                                                     <div className="flex flex-col h-full">
@@ -244,7 +244,7 @@ export default function PlayPage() {
                                                             e.stopPropagation();
                                                             setEditingTheme({ ...theme });
                                                         }}
-                                                        className="p-1.5 bg-surface border rounded-lg hover:bg-surface-strong transition-colors"
+                                                        className="p-1.5 rounded-lg hover:bg-surface-strong transition-colors"
                                                         title="Editar"
                                                     >
                                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -256,7 +256,7 @@ export default function PlayPage() {
                                                             e.stopPropagation();
                                                             setDeleteConfirmTheme(theme.id);
                                                         }}
-                                                        className="p-1.5 bg-surface border rounded-lg hover:bg-surface-strong transition-colors text-destructive"
+                                                        className="p-1.5 rounded-lg hover:bg-surface-strong transition-colors text-destructive"
                                                         title="Deletar"
                                                     >
                                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -267,7 +267,7 @@ export default function PlayPage() {
 
                                                 {/* Delete Confirmation */}
                                                 {deleteConfirmTheme === theme.id && (
-                                                    <div className="absolute inset-0 bg-layout-card border-2 border-destructive rounded-xl p-4 flex flex-col justify-center items-center gap-3 z-10">
+                                                    <div className="absolute inset-0 bg-layout-card border border-destructive rounded-xl p-4 flex flex-col justify-center items-center gap-3 z-10">
                                                         <p className="text-sm font-semibold text-center">
                                                             Deletar tema?
                                                         </p>
@@ -338,7 +338,7 @@ export default function PlayPage() {
                                         </p>
                                     </div>
                                 ) : subTopics.length === 0 ? (
-                                    <div className="text-center py-8 border-2 border-dashed rounded-lg">
+                                    <div className="text-center py-8 border border-dashed rounded-lg">
                                         <p className="text-muted-foreground text-sm">
                                             Nenhum subtópico disponível para este tema.
                                         </p>
@@ -381,7 +381,7 @@ export default function PlayPage() {
                                                     </div>
                                                 ) : deleteConfirmSubTopic === subTopic.id ? (
                                                     // Delete Confirmation
-                                                    <div className="bg-destructive/10 border-2 border-destructive rounded-lg p-4 space-y-3">
+                                                    <div className="bg-destructive/10 border border-destructive rounded-lg p-4 space-y-3">
                                                         <p className="text-sm font-semibold text-center">
                                                             Deletar subtópico?
                                                         </p>

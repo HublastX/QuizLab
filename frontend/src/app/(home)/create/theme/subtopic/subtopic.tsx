@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, forwardRef, useImperativeHandle } from "react";
 import { Input } from "@/components/ui/input";
 import { useSubTopic } from "@/hook/useSubTopic";
 import { useFormNavigation } from "@/hook/useFormNavigation";
@@ -15,9 +15,15 @@ interface SubtopicProps {
         isNew: boolean;
     }) => void;
     onSubmit?: () => void;
+    onExitUp?: () => void;
 }
 
-export function Subtopic({ themeId, onSubtopicChange, onSubmit }: SubtopicProps) {
+export interface SubtopicRef {
+    focusFirst: () => void;
+    focusLast: () => void;
+}
+
+export const Subtopic = forwardRef<SubtopicRef, SubtopicProps>(({ themeId, onSubtopicChange, onSubmit, onExitUp }, ref) => {
     const { subTopics, loading, getSubTopicsByTheme } = useSubTopic();
 
     const [subTopic, setSubTopic] = useState("");
@@ -27,7 +33,16 @@ export function Subtopic({ themeId, onSubtopicChange, onSubmit }: SubtopicProps)
     const formRef = useRef<HTMLDivElement>(null);
 
     // Usa o hook de navegação por teclado
-    useFormNavigation(formRef, { enabled: true, onSubmit });
+    const { focusFirst, focusLast } = useFormNavigation(formRef, { 
+        enabled: true, 
+        onSubmit,
+        onExitUp 
+    });
+
+    useImperativeHandle(ref, () => ({
+        focusFirst,
+        focusLast
+    }));
 
     // Carrega subtopics quando tem themeId
     useEffect(() => {
@@ -71,10 +86,6 @@ export function Subtopic({ themeId, onSubtopicChange, onSubmit }: SubtopicProps)
         setSelectedSubTopicId("");
     };
 
-    const focusFirst = () => {
-        formRef.current?.querySelector<HTMLInputElement>('input')?.focus();
-    };
-
     return (
         <div ref={formRef} className="w-full border rounded-2xl bg-layout-card relative group">
             <div className="border-b p-6 flex justify-between items-start">
@@ -85,14 +96,6 @@ export function Subtopic({ themeId, onSubtopicChange, onSubmit }: SubtopicProps)
                         Use <strong>↑↓</strong> para navegar, <strong>Enter</strong> para selecionar
                     </p>
                 </div>
-                <button 
-                    onClick={focusFirst}
-                    className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors opacity-50 group-hover:opacity-100"
-                    title="Focar neste bloco"
-                    type="button"
-                >
-                    <BsArrowDown className="text-xl" />
-                </button>
             </div>
 
             <div className="p-6 gap-4 flex flex-col">
@@ -156,4 +159,6 @@ export function Subtopic({ themeId, onSubtopicChange, onSubmit }: SubtopicProps)
             </div>
         </div>
     );
-}
+});
+
+Subtopic.displayName = "Subtopic";

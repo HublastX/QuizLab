@@ -4,6 +4,8 @@ interface UseFormNavigationOptions {
   onSubmit?: () => void;
   enabled?: boolean;
   submitButtonRef?: RefObject<HTMLButtonElement>;
+  onExitUp?: () => void;
+  onExitDown?: () => void;
 }
 
 /**
@@ -15,7 +17,7 @@ export const useFormNavigation = (
   formRef: RefObject<HTMLFormElement | HTMLDivElement | null>,
   options: UseFormNavigationOptions = {}
 ) => {
-  const { onSubmit, enabled = true, submitButtonRef } = options;
+  const { onSubmit, enabled = true, submitButtonRef, onExitUp, onExitDown } = options;
   const focusableElements = useRef<HTMLElement[]>([]);
 
   useEffect(() => {
@@ -53,8 +55,13 @@ export const useFormNavigation = (
           if (currentIndex < focusableElements.current.length - 1) {
             focusableElements.current[currentIndex + 1]?.focus();
           } else {
-            // Se estiver no último elemento, volta para o primeiro
-            focusableElements.current[0]?.focus();
+            // Se estiver no último elemento
+            if (onExitDown) {
+                onExitDown();
+            } else {
+                // Comportamento padrão: volta para o primeiro
+                focusableElements.current[0]?.focus();
+            }
           }
           break;
 
@@ -63,12 +70,26 @@ export const useFormNavigation = (
           if (currentIndex > 0) {
             focusableElements.current[currentIndex - 1]?.focus();
           } else {
-            // Se estiver no primeiro elemento, vai para o último
-            focusableElements.current[focusableElements.current.length - 1]?.focus();
+            // Se estiver no primeiro elemento
+            if (onExitUp) {
+                onExitUp();
+            } else {
+                // Comportamento padrão: vai para o último
+                focusableElements.current[focusableElements.current.length - 1]?.focus();
+            }
           }
           break;
 
         case 'Enter':
+          // Se for um checkbox, simula o clique para marcar/desmarcar
+          if (target.tagName === 'INPUT' && (target as HTMLInputElement).type === 'checkbox') {
+            // O comportamento padrão do Enter no checkbox não é marcar, então forçamos o click
+            // Mas prevenimos o default para não submeter formulário se houver
+            e.preventDefault();
+            target.click();
+            return;
+          }
+
           // Se for um select, abre o dropdown
           if (target.tagName === 'SELECT') {
             const selectElement = target as HTMLSelectElement;
@@ -143,17 +164,42 @@ export const useFormNavigation = (
       document.removeEventListener('keydown', handleKeyDown);
       observer.disconnect();
     };
-  }, [formRef, onSubmit, enabled, submitButtonRef]);
+  }, [formRef, onSubmit, enabled, submitButtonRef, onExitUp, onExitDown]);
 
   return {
     // Função para focar no primeiro elemento
     focusFirst: () => {
-      focusableElements.current[0]?.focus();
+        // Pequeno delay para garantir que o elemento esteja visível/renderizado se necessário
+        setTimeout(() => {
+            if (focusableElements.current.length === 0 && formRef.current) {
+                 // Tenta atualizar se a lista estiver vazia
+                 const elements = formRef.current.querySelectorAll<HTMLElement>(
+                    'input:not([disabled]):not([type="hidden"]), textarea:not([disabled]), button:not([disabled]), select:not([disabled])'
+                  );
+                  focusableElements.current = Array.from(elements).filter(el => {
+                      const style = window.getComputedStyle(el);
+                      return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
+                  });
+            }
+            focusableElements.current[0]?.focus();
+        }, 0);
     },
     // Função para focar no último elemento
     focusLast: () => {
-      const last = focusableElements.current[focusableElements.current.length - 1];
-      last?.focus();
+        setTimeout(() => {
+            if (focusableElements.current.length === 0 && formRef.current) {
+                 const elements = formRef.current.querySelectorAll<HTMLElement>(
+                    'input:not([disabled]):not([type="hidden"]), textarea:not([disabled]), button:not([disabled]), select:not([disabled])'
+                  );
+                  focusableElements.current = Array.from(elements).filter(el => {
+                      const style = window.getComputedStyle(el);
+                      return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
+                  });
+            }
+            const last = focusableElements.current[focusableElements.current.length - 1];
+            last?.focus();
+        }, 0);
     },
   };
 };
+
