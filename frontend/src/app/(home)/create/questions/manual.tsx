@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { QuestionData } from "../page";
 import { useFormNavigation } from "@/hook/useFormNavigation";
+import { toast } from "react-toastify";
 
 interface ManualQuestionsProps {
     onQuestionsChange: (questions: QuestionData[]) => void;
@@ -51,6 +52,16 @@ export default function ManualQuestions({
         value: string | boolean
     ) => {
         const newAlternatives = [...alternatives];
+        
+        // Se estiver marcando como correta, desmarcar as outras
+        if (field === "correct" && value === true) {
+            newAlternatives.forEach((alt, i) => {
+                if (i !== index) {
+                    alt.correct = false;
+                }
+            });
+        }
+        
         newAlternatives[index] = { ...newAlternatives[index], [field]: value };
         setAlternatives(newAlternatives);
     };
@@ -58,20 +69,24 @@ export default function ManualQuestions({
     const handleAddQuestion = () => {
         // Validações
         if (!questionText.trim()) {
-            alert("Digite o texto da questão!");
+            toast.warning("Digite o texto da questão!");
             return;
         }
         const filledAlternatives = alternatives.filter((alt) =>
             alt.text.trim()
         );
         if (filledAlternatives.length < 2) {
-            alert("Adicione pelo menos 2 alternativas!");
+            toast.warning("Adicione pelo menos 2 alternativas!");
             return;
         }
 
-        const hasCorrect = filledAlternatives.some((alt) => alt.correct);
-        if (!hasCorrect) {
-            alert("Marque pelo menos uma alternativa como correta!");
+        const correctCount = filledAlternatives.filter((alt) => alt.correct).length;
+        if (correctCount === 0) {
+            toast.warning("Marque uma alternativa como correta!");
+            return;
+        }
+        if (correctCount > 1) {
+            toast.warning("Apenas uma alternativa pode ser marcada como correta!");
             return;
         }
 
@@ -80,7 +95,7 @@ export default function ManualQuestions({
             alt.explanation.trim()
         );
         if (!allHaveExplanation) {
-            alert("Todas as alternativas precisam ter uma explicação!");
+            toast.warning("Todas as alternativas precisam ter uma explicação!");
             return;
         }
 
@@ -100,7 +115,7 @@ export default function ManualQuestions({
             { text: "", correct: false, explanation: "" },
         ]);
 
-        alert("Questão adicionada! Clique em 'Finalizar' quando terminar.");
+        toast.success("Questão adicionada! Clique em 'Finalizar' quando terminar.");
     };
 
     const removeQuestion = (index: number) => {

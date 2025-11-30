@@ -11,6 +11,7 @@ import { useQuiz } from "@/hook/useQuiz";
 import SetQuiz from "./theme/set";
 import { AutomaticModeData } from "./questions/automatico/automatico";
 import { QuizPergunta } from "@/util/types/quiz";
+import { toast } from "react-toastify";
 
 interface ThemeData {
     id?: string;
@@ -48,6 +49,7 @@ export default function CreateQuiz() {
     const [automaticData, setAutomaticData] =
         useState<AutomaticModeData | null>(null);
     const [saving, setSaving] = useState(false);
+    const [questionModeSelected, setQuestionModeSelected] = useState(false);
 
     // New state for duplicate prevention
     const [generatedQuestions, setGeneratedQuestions] = useState<
@@ -63,12 +65,12 @@ export default function CreateQuiz() {
 
     const handleNext = () => {
         if (!themeData?.title) {
-            alert("Preencha o tema!");
+            toast.warning("Preencha o tema!");
             return;
         }
 
         if (!subtopicData?.subTopic) {
-            alert("Preencha o subtópico!");
+            toast.warning("Preencha o subtópico!");
             return;
         }
 
@@ -98,11 +100,11 @@ export default function CreateQuiz() {
         // Validação
         if (isAutomatic) {
             if (!automaticData) {
-                alert("Preencha os dados para geração automática!");
+                toast.warning("Preencha os dados para geração automática!");
                 return;
             }
             if (automaticData.mode === "text" && !automaticData.text) {
-                alert("Preencha o texto para geração!");
+                toast.warning("Preencha o texto para geração!");
                 return;
             }
             if (
@@ -110,12 +112,12 @@ export default function CreateQuiz() {
                     automaticData.mode === "document") &&
                 !automaticData.file
             ) {
-                alert("Selecione um arquivo para geração!");
+                toast.warning("Selecione um arquivo para geração!");
                 return;
             }
         } else {
             if (questionsData.length === 0) {
-                alert("Adicione pelo menos uma questão!");
+                toast.warning("Adicione pelo menos uma questão!");
                 return;
             }
         }
@@ -212,11 +214,11 @@ export default function CreateQuiz() {
                 }
             }
 
-            alert("Quiz criado com sucesso!");
+            toast.success("Quiz criado com sucesso!");
             window.location.href = "/quiz-lab/home";
         } catch (err) {
             console.error("Erro ao criar quiz:", err);
-            alert("Erro ao criar quiz. Tente novamente.");
+            toast.error("Erro ao criar quiz. Tente novamente.");
         } finally {
             setSaving(false);
         }
@@ -236,9 +238,11 @@ export default function CreateQuiz() {
                 <Questions
                     onQuestionsChange={setQuestionsData}
                     onAutomaticDataChange={setAutomaticData}
-                    onModeChange={(mode) =>
-                        setIsAutomatic(mode === "automatic")
-                    }
+                    onModeChange={(mode) => {
+                        setIsAutomatic(mode === "automatic");
+                        setQuestionModeSelected(true);
+                    }}
+                    onModeReset={() => setQuestionModeSelected(false)}
                     questions={questionsData}
                     themeId={themeData?.id || ""}
                     subTopicId={subtopicData?.id || ""}
@@ -247,7 +251,7 @@ export default function CreateQuiz() {
             )}
 
             <nav className="flex justify-between mt-10">
-                {currentStep === "questions" && (
+                {currentStep === "questions" && questionModeSelected && (
                     <Button
                         variant="subtle"
                         onClick={handleBack}
@@ -263,7 +267,7 @@ export default function CreateQuiz() {
                     </Button>
                 )}
 
-                {currentStep === "questions" && (
+                {currentStep === "questions" && questionModeSelected && (
                     <Button
                         onClick={handleFinish}
                         disabled={saving}

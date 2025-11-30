@@ -5,12 +5,20 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hook/useAuth";
 import { Button } from "@/components/ui/button";
 import { BsArrowDown, BsArrowUp, BsArrowReturnLeft } from "react-icons/bs";
+import { toast } from "react-toastify";
+import { useHeader } from "@/context/HeaderContext";
 
 export default function Registro() {
     const { register, loading, error, clearError } = useAuth();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    const { setHeaderVariant } = useHeader();
+
+    useEffect(() => {
+        setHeaderVariant("default");
+    }, [setHeaderVariant]);
 
     const nameRef = useRef<HTMLInputElement>(null);
     const emailRef = useRef<HTMLInputElement>(null);
@@ -26,8 +34,10 @@ export default function Registro() {
 
         try {
             const response = await register({ name, email, password });
+            toast.success("Registro realizado com sucesso! Faça login.");
             console.log("Registro successful:", response);
         } catch (err) {
+            toast.error("Falha no registro. Verifique os dados.");
             console.error("Falha no registro:", err);
         }
     };

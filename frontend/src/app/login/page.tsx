@@ -5,11 +5,19 @@ import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hook/useAuth";
 import { Button } from "@/components/ui/button";
 import { BsArrowDown, BsArrowUp, BsArrowReturnLeft } from "react-icons/bs";
+import { toast } from "react-toastify";
+import { useHeader } from "@/context/HeaderContext";
 
 export default function Login() {
     const { login, loading, error } = useAuth();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    const { setHeaderVariant } = useHeader();
+
+    useEffect(() => {
+        setHeaderVariant("default");
+    }, [setHeaderVariant]);
     
     const emailRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
@@ -17,10 +25,15 @@ export default function Login() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        const response = await login({ email, password });
-
-        if (response) {
-            console.log("Login successful:", response);
+        try {
+            const response = await login({ email, password });
+            if (response) {
+                toast.success("Login realizado com sucesso!");
+                console.log("Login successful:", response);
+            }
+        } catch (err) {
+            toast.error("Erro ao realizar login. Verifique suas credenciais.");
+            console.error("Login failed:", err);
         }
     };
 

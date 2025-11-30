@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect, useRef } from "react";
 import { Texto } from "./texto";
 import { Documento } from "./documento";
 import { Audio } from "./audio";
@@ -22,6 +23,8 @@ interface AutomaticQuestionsProps {
 }
 
 export default function AutomaticQuestions({ mode, onModeSelect, onDataChange, onSubmit }: AutomaticQuestionsProps) {
+    const [focusedOptionIndex, setFocusedOptionIndex] = useState<number>(0);
+    const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
     const handleDataChange = (data: { text?: string; file?: File; num_questions: number; num_alternatives: number } | null) => {
         if (data && mode) {
@@ -33,6 +36,39 @@ export default function AutomaticQuestions({ mode, onModeSelect, onDataChange, o
             onDataChange(null);
         }
     };
+
+    // Keyboard navigation for mode selection
+    useEffect(() => {
+        if (mode !== null) return; // Only active in selection mode
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            const totalOptions = 3; // text, document, audio
+
+            if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+                e.preventDefault();
+                setFocusedOptionIndex((prev) => (prev + 1) % totalOptions);
+            } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+                e.preventDefault();
+                setFocusedOptionIndex((prev) => (prev - 1 + totalOptions) % totalOptions);
+            } else if (e.key === "Enter") {
+                e.preventDefault();
+                // Select the focused option
+                const modes: GenerationMode[] = ["text", "document", "audio"];
+                const selectedMode = modes[focusedOptionIndex];
+                onModeSelect(selectedMode);
+            }
+        };
+
+        document.addEventListener("keydown", handleKeyDown);
+        return () => document.removeEventListener("keydown", handleKeyDown);
+    }, [mode, focusedOptionIndex, onModeSelect]);
+
+    // Focus the button when index changes
+    useEffect(() => {
+        if (mode === null && buttonRefs.current[focusedOptionIndex]) {
+            buttonRefs.current[focusedOptionIndex]?.focus();
+        }
+    }, [focusedOptionIndex, mode]);
 
     if (mode === "text") {
         return (
@@ -75,8 +111,11 @@ export default function AutomaticQuestions({ mode, onModeSelect, onDataChange, o
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Opção: Texto */}
                 <button
+                    ref={(el) => { buttonRefs.current[0] = el; }}
                     onClick={() => onModeSelect("text")}
-                    className="group bg-layout-card border-2  rounded-xl p-6 hover:border-blue-500 hover:shadow-lg transition-all duration-200 text-left"
+                    className={`group bg-layout-card border-2 rounded-xl p-6 hover:border-blue-500 hover:shadow-lg transition-all duration-200 text-left ${
+                        focusedOptionIndex === 0 && mode === null ? "ring-2 ring-blue-500 border-blue-500" : ""
+                    }`}
                 >
                     <div className="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-blue-500 transition-colors">
                         <svg
@@ -102,8 +141,11 @@ export default function AutomaticQuestions({ mode, onModeSelect, onDataChange, o
 
                 {/* Opção: Documento */}
                 <button
+                    ref={(el) => { buttonRefs.current[1] = el; }}
                     onClick={() => onModeSelect("document")}
-                    className="group bg-layout-card border-2  rounded-xl p-6 hover:border-green-500 hover:shadow-lg transition-all duration-200 text-left"
+                    className={`group bg-layout-card border-2 rounded-xl p-6 hover:border-green-500 hover:shadow-lg transition-all duration-200 text-left ${
+                        focusedOptionIndex === 1 && mode === null ? "ring-2 ring-green-500 border-green-500" : ""
+                    }`}
                 >
                     <div className="w-14 h-14 bg-green-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-green-500 transition-colors">
                         <svg
@@ -122,14 +164,17 @@ export default function AutomaticQuestions({ mode, onModeSelect, onDataChange, o
                     </div>
                     <h3 className="text-xl font-semibold mb-2">Documento</h3>
                     <p className="text-sm ">
-                        Faça upload de PDF, DOCX ou TXT para gerar questões
+                        Faça upload de PDF, DOCX, XLSX, PPTX ou TXT para gerar questões
                     </p>
                 </button>
 
                 {/* Opção: Áudio */}
                 <button
+                    ref={(el) => { buttonRefs.current[2] = el; }}
                     onClick={() => onModeSelect("audio")}
-                    className="group bg-layout-card border-2  rounded-xl p-6 hover:border-purple-500 hover:shadow-lg transition-all duration-200 text-left"
+                    className={`group bg-layout-card border-2 rounded-xl p-6 hover:border-purple-500 hover:shadow-lg transition-all duration-200 text-left ${
+                        focusedOptionIndex === 2 && mode === null ? "ring-2 ring-purple-500 border-purple-500" : ""
+                    }`}
                 >
                     <div className="w-14 h-14 bg-purple-100 rounded-lg flex items-center justify-center mb-4 group-hover:bg-purple-500 transition-colors">
                         <svg

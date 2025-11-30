@@ -29,6 +29,7 @@ export default function SubTopicPlayPage() {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [questionStates, setQuestionStates] = useState<QuestionState[]>([]);
     const [showResults, setShowResults] = useState(false);
+    const [focusedAlternativeIndex, setFocusedAlternativeIndex] = useState<number>(0);
 
     useEffect(() => {
         const loadQuestions = async () => {
@@ -64,6 +65,61 @@ export default function SubTopicPlayPage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [subTopicId]);
 
+    // Keyboard navigation
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (showResults) return;
+
+            const currentState = questionStates[currentQuestionIndex];
+            const currentQuestion = questions[currentQuestionIndex];
+
+            // Navigate between alternatives with Up/Down arrows
+            if (e.key === "ArrowDown") {
+                e.preventDefault();
+                if (!currentState?.isAnswered && currentQuestion) {
+                    setFocusedAlternativeIndex((prev) => 
+                        Math.min(prev + 1, currentQuestion.alternatives.length - 1)
+                    );
+                }
+            } else if (e.key === "ArrowUp") {
+                e.preventDefault();
+                if (!currentState?.isAnswered && currentQuestion) {
+                    setFocusedAlternativeIndex((prev) => Math.max(prev - 1, 0));
+                }
+            }
+            // Navigate between questions with Left/Right arrows
+            else if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                if (currentQuestionIndex > 0) {
+                    handlePreviousQuestion();
+                }
+            } else if (e.key === "ArrowRight") {
+                e.preventDefault();
+                if (currentState?.isAnswered) {
+                    handleNextQuestion();
+                }
+            }
+            // Confirm answer with Enter
+            else if (e.key === "Enter") {
+                e.preventDefault();
+                if (!currentState?.isAnswered) {
+                    if (currentState?.selectedAnswer === null) {
+                        // Select the focused alternative
+                        handleAnswerSelect(focusedAlternativeIndex);
+                    }
+                    // Confirm the answer
+                    handleConfirmAnswer();
+                } else {
+                    // Move to next question if already answered
+                    handleNextQuestion();
+                }
+            }
+        };
+
+        document.addEventListener("keydown", handleKeyDown);
+        return () => document.removeEventListener("keydown", handleKeyDown);
+    }, [currentQuestionIndex, questionStates, questions, showResults, focusedAlternativeIndex]);
+
     const handleAnswerSelect = (answerIndex: number) => {
         const currentState = questionStates[currentQuestionIndex];
         if (currentState.isAnswered) return; // Não permite mudar resposta após confirmar
@@ -96,6 +152,7 @@ export default function SubTopicPlayPage() {
     const handleNextQuestion = () => {
         if (currentQuestionIndex < questions.length - 1) {
             setCurrentQuestionIndex((prev) => prev + 1);
+            setFocusedAlternativeIndex(0);
         } else {
             setShowResults(true);
         }
@@ -103,6 +160,7 @@ export default function SubTopicPlayPage() {
 
     const handlePreviousQuestion = () => {
         setCurrentQuestionIndex((prev) => Math.max(0, prev - 1));
+        setFocusedAlternativeIndex(0);
     };
 
     const handleRestartQuiz = () => {
@@ -183,7 +241,7 @@ export default function SubTopicPlayPage() {
                         <h1 className="text-4xl font-bold mb-2 text-foreground">
                             {feedback.title}
                         </h1>
-                        <p className="text-gray-600 text-lg mb-8">
+                        <p className=" text-lg mb-8">
                             {feedback.message}
                         </p>
 
@@ -357,7 +415,7 @@ export default function SubTopicPlayPage() {
                 {/* Barra de progresso */}
                 <div className="w-full bg-gray-200 rounded-full h-2">
                     <div
-                        className="bg-gradient-to-r from-qorange-default to-qblue-default h-2 rounded-full transition-all duration-300"
+                        className="bg-gradient-to-r from-qblue-600 to-qblue-default h-2 rounded-full transition-all duration-300"
                         style={{
                             width: `${
                                 ((currentQuestionIndex + 1) /
@@ -387,6 +445,8 @@ export default function SubTopicPlayPage() {
                             isSelected &&
                             !isCorrectAnswer;
 
+                        const isFocused = !currentState.isAnswered && focusedAlternativeIndex === idx;
+                        
                         return (
                             <button
                                 key={idx}
@@ -399,6 +459,8 @@ export default function SubTopicPlayPage() {
                                         ? "bg-badge-error/40 border-badge-error"
                                         : isSelected
                                         ? "bg-qblue-default/40 border-qblue-default"
+                                        : isFocused
+                                        ? "bg-qorange-default/20 border-qorange-default ring-2 ring-qorange-default"
                                         : "border-gray-300 hover:bg-qblue-default/40 hover:border-qblue-default"
                                 } ${
                                     currentState.isAnswered
@@ -415,6 +477,8 @@ export default function SubTopicPlayPage() {
                                                 ? "bg-badge-error/40 border-badge-error "
                                                 : isSelected
                                                 ? "bg-qblue-default/40 border-qblue-default "
+                                                : isFocused
+                                                ? "bg-qorange-default/40 border-qorange-default"
                                                 : "border-gray-400"
                                         }`}
                                     >
@@ -459,7 +523,7 @@ export default function SubTopicPlayPage() {
             </div>
 
             {/* Navegação */}
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center gap-3">
                 <Button
                     variant="subtle"
                     onClick={handlePreviousQuestion}
@@ -501,21 +565,14 @@ export default function SubTopicPlayPage() {
                     })}
                 </div>
 
-                {currentState.isAnswered ? (
-                    <Button onClick={handleNextQuestion}>
-                        {currentQuestionIndex === questions.length - 1
-                            ? "Ver Resultados"
-                            : "Próxima →"}
-                    </Button>
-                ) : (
-                    <Button
-                        onClick={handleNextQuestion}
-                        disabled={!currentState.isAnswered}
-                        variant="subtle"
-                    >
-                        Pular →
-                    </Button>
-                )}
+                <Button 
+                    onClick={handleNextQuestion}
+                    disabled={!currentState.isAnswered}
+                >
+                    {currentQuestionIndex === questions.length - 1
+                        ? "Ver Resultados"
+                        : "Próxima →"}
+                </Button>
             </div>
         </div>
     );

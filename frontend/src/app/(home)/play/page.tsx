@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useTheme } from "@/hook/useTheme";
 import { useSubTopic } from "@/hook/useSubTopic";
 import { Theme } from "@/util/types/theme";
@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import LoadingScreen from "@/layout/LoadingScreen";
+import { toast } from "react-toastify";
 
 export default function PlayPage() {
     const { getThemes, updateTheme, deleteTheme } = useTheme();
@@ -26,11 +27,58 @@ export default function PlayPage() {
     const [editingSubTopic, setEditingSubTopic] = useState<SubTopic | null>(null);
     const [deleteConfirmTheme, setDeleteConfirmTheme] = useState<string | null>(null);
     const [deleteConfirmSubTopic, setDeleteConfirmSubTopic] = useState<string | null>(null);
+    
+    // Keyboard navigation
+    const [focusedThemeIndex, setFocusedThemeIndex] = useState<number>(0);
+    const themeButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
     useEffect(() => {
         loadThemes();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    // Keyboard navigation for themes
+    useEffect(() => {
+        if (editingTheme || deleteConfirmTheme) return; // Disable when editing or deleting
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (themes.length === 0) return;
+
+            // Calculate grid dimensions (4 columns on xl, 2 on md, 1 on mobile)
+            // For simplicity, we'll use 4 columns as the base
+            const columns = 4;
+            const totalThemes = themes.length;
+
+            if (e.key === "ArrowRight") {
+                e.preventDefault();
+                setFocusedThemeIndex((prev) => Math.min(prev + 1, totalThemes - 1));
+            } else if (e.key === "ArrowLeft") {
+                e.preventDefault();
+                setFocusedThemeIndex((prev) => Math.max(prev - 1, 0));
+            } else if (e.key === "ArrowDown") {
+                e.preventDefault();
+                setFocusedThemeIndex((prev) => Math.min(prev + columns, totalThemes - 1));
+            } else if (e.key === "ArrowUp") {
+                e.preventDefault();
+                setFocusedThemeIndex((prev) => Math.max(prev - columns, 0));
+            } else if (e.key === "Enter") {
+                e.preventDefault();
+                if (themes[focusedThemeIndex]) {
+                    handleSelectTheme(themes[focusedThemeIndex]);
+                }
+            }
+        };
+
+        document.addEventListener("keydown", handleKeyDown);
+        return () => document.removeEventListener("keydown", handleKeyDown);
+    }, [themes, focusedThemeIndex, editingTheme, deleteConfirmTheme]);
+
+    // Focus the theme button when index changes
+    useEffect(() => {
+        if (themeButtonRefs.current[focusedThemeIndex] && !editingTheme && !deleteConfirmTheme) {
+            themeButtonRefs.current[focusedThemeIndex]?.focus();
+        }
+    }, [focusedThemeIndex, editingTheme, deleteConfirmTheme]);
 
     const loadThemes = async () => {
         try {
@@ -86,9 +134,10 @@ export default function PlayPage() {
             });
             await loadThemes();
             setEditingTheme(null);
+            toast.success("Tema atualizado com sucesso!");
         } catch (err) {
             console.error("Error updating theme:", err);
-            alert("Erro ao atualizar tema");
+            toast.error("Erro ao atualizar tema");
         }
     };
 
@@ -100,9 +149,10 @@ export default function PlayPage() {
             if (selectedTheme?.id === themeId) {
                 handleClosePanel();
             }
+            toast.success("Tema deletado com sucesso!");
         } catch (err) {
             console.error("Error deleting theme:", err);
-            alert("Erro ao deletar tema");
+            toast.error("Erro ao deletar tema");
         }
     };
 
@@ -119,9 +169,10 @@ export default function PlayPage() {
                 setSubTopics(data || []);
             }
             setEditingSubTopic(null);
+            toast.success("Subtópico atualizado com sucesso!");
         } catch (err) {
             console.error("Error updating subtopic:", err);
-            alert("Erro ao atualizar subtópico");
+            toast.error("Erro ao atualizar subtópico");
         }
     };
 
@@ -133,9 +184,10 @@ export default function PlayPage() {
                 setSubTopics(data || []);
             }
             setDeleteConfirmSubTopic(null);
+            toast.success("Subtópico deletado com sucesso!");
         } catch (err) {
             console.error("Error deleting subtopic:", err);
-            alert("Erro ao deletar subtópico");
+            toast.error("Erro ao deletar subtópico");
         }
     };
 
@@ -180,7 +232,7 @@ export default function PlayPage() {
                             </div>
                         ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-                                {themes.map((theme) => (
+                                {themes.map((theme, index) => (
                                     <div key={theme.id} className="relative">
                                         {editingTheme?.id === theme.id ? (
                                             // Edit Mode
@@ -210,10 +262,15 @@ export default function PlayPage() {
                                             // View Mode
                                             <>
                                                 <button
+                                                    ref={(el) => {
+                                                        themeButtonRefs.current[index] = el;
+                                                    }}
                                                     onClick={() => handleSelectTheme(theme)}
                                                     className={`w-full p-6 rounded-xl border transition-all duration-200 hover:border-2 text-left hover:shadow-md hover:scale-[1.02] group ${
                                                         selectedTheme?.id === theme.id
                                                             ? "border-primary border-3 bg-primary/5 shadow-md "
+                                                            : focusedThemeIndex === index && !editingTheme && !deleteConfirmTheme
+                                                            ? "border-primary border-2 ring-2 ring-primary"
                                                             : "border bg-card hover:border-primary/50"
                                                     }`}
                                                 >

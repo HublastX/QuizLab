@@ -32,11 +32,17 @@ export function Documento({ onDataChange, onSubmit }: DocumentoProps) {
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            const validTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain'];
-            const validExtensions = /\.(pdf|docx|txt)$/i;
+            const validTypes = [
+                'application/pdf',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                'text/plain'
+            ];
+            const validExtensions = /\.(pdf|docx|xlsx|pptx|txt)$/i;
             
             if (!validTypes.includes(file.type) && !file.name.match(validExtensions)) {
-                alert("Por favor, selecione um arquivo válido (PDF, DOCX ou TXT).");
+                alert("Por favor, selecione um arquivo válido (PDF, DOCX, XLSX, PPTX ou TXT).");
                 return;
             }
             setDocumentFile(file);
@@ -76,6 +82,18 @@ export function Documento({ onDataChange, onSubmit }: DocumentoProps) {
                     <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
                 </svg>
             );
+        } else if (extension === 'xlsx') {
+            return (
+                <svg className="w-12 h-12 text-green-600 mb-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
+                </svg>
+            );
+        } else if (extension === 'pptx') {
+            return (
+                <svg className="w-12 h-12 text-orange-500 mb-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
+                </svg>
+            );
         } else {
             return (
                 <svg className="w-12 h-12 text-gray-500 mb-3" fill="currentColor" viewBox="0 0 20 20">
@@ -90,7 +108,7 @@ export function Documento({ onDataChange, onSubmit }: DocumentoProps) {
             <div className="mb-6">
                 <h3 className="text-xl font-bold mb-2">Arquivo de Documento</h3>
                 <p className="">
-                    Envie um arquivo PDF, DOCX ou TXT que será usado como base para gerar as questões automaticamente
+                    Envie um arquivo PDF, DOCX, XLSX, PPTX ou TXT que será usado como base para gerar as questões automaticamente
                 </p>
             </div>
 
@@ -139,7 +157,7 @@ export function Documento({ onDataChange, onSubmit }: DocumentoProps) {
                     <input
                         id="documentInput"
                         type="file"
-                        accept=".pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
+                        accept=".pdf,.docx,.xlsx,.pptx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.openxmlformats-officedocument.presentationml.presentation,text/plain"
                         onChange={handleFileChange}
                         className="hidden"
                     />
@@ -162,7 +180,7 @@ export function Documento({ onDataChange, onSubmit }: DocumentoProps) {
                                         Clique para selecionar um documento
                                     </p>
                                     <p className="text-xs text-gray-500 mt-1">
-                                        PDF, DOCX ou TXT
+                                        PDF, DOCX, XLSX, PPTX ou TXT
                                     </p>
                                 </>
                             )}

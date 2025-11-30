@@ -1,7 +1,7 @@
 // /create/question/questions.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import AutomaticQuestions, {
     AutomaticModeData,
     GenerationMode,
@@ -15,6 +15,7 @@ interface QuestionsProps {
     onQuestionsChange: (questions: QuestionData[]) => void;
     onAutomaticDataChange: (data: AutomaticModeData | null) => void;
     onModeChange: (mode: "manual" | "automatic") => void;
+    onModeReset?: () => void;
     questions: QuestionData[];
     themeId: string;
     subTopicId: string;
@@ -25,6 +26,7 @@ export default function Questions({
     onQuestionsChange,
     onAutomaticDataChange,
     onModeChange,
+    onModeReset,
     questions,
     themeId,
     subTopicId,
@@ -33,6 +35,7 @@ export default function Questions({
     const [currentMode, setCurrentMode] = useState<
         GenerationMode | "manual" | null
     >(null);
+    const manualButtonRef = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
         if (currentMode === "manual") {
@@ -42,12 +45,28 @@ export default function Questions({
         }
     }, [currentMode, onModeChange]);
 
+    // ESC key to go back
+    useEffect(() => {
+        if (currentMode === null) return;
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                e.preventDefault();
+                handleBack();
+            }
+        };
+
+        document.addEventListener("keydown", handleKeyDown);
+        return () => document.removeEventListener("keydown", handleKeyDown);
+    }, [currentMode]);
+
     const handleModeSelect = (mode: GenerationMode) => {
         setCurrentMode(mode);
     };
 
     const handleBack = () => {
         setCurrentMode(null);
+        onModeReset?.();
     };
 
     if (currentMode === "manual") {
@@ -111,6 +130,7 @@ export default function Questions({
                         Ou crie manualmente
                     </h3>
                     <button
+                        ref={manualButtonRef}
                         onClick={() => setCurrentMode("manual")}
                         className="w-full group bg-layout-card border-2 rounded-xl p-6 hover:border-orange-500 hover:shadow-lg transition-all duration-200 text-left flex items-center gap-6"
                     >
