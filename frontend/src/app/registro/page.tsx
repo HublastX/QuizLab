@@ -75,10 +75,10 @@ export default function Registro() {
         <div className="flex flex-col items-center justify-center">
             <h1 className="text-6xl font-black">Cadastrar-se</h1>
 
-            <p className="mt-2 opacity-70 text-sm">
+            {/* <p className="mt-2 opacity-70 text-sm">
                 Use as setas <strong>↑</strong> e <strong>↓</strong> para
                 navegar entre os campos.
-            </p>
+            </p> */}
 
             <form
                 onSubmit={handleSubmit}
