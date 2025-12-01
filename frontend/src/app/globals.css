@@ -2,7 +2,6 @@
 @import "tailwindcss";
 @config "../../tailwind.config.js";
 
-
 :root,
 html[data-theme="light"] {
     --background: #f9fafb;
@@ -79,16 +78,18 @@ html[data-theme="dark"] {
     }
 }
 
+html {
+    font-size: 16px; /* Tamanho base padrão - será escalado pelo JavaScript */
+}
+
 body {
     font-family: var(--font), Arial, Helvetica, sans-serif;
-    font-size: var(--base-font-size);
 }
 
 [vw] {
-  z-index: 999999 !important;
-  position: fixed !important;
+    z-index: 999999 !important;
+    position: fixed !important;
 }
-
 
 .font-dyslexic {
     --font: var(--font-dyslexic);

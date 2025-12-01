@@ -38,33 +38,33 @@ export default function Header() {
   // NAV PARA VARIANT DASHBOARD (logado)
   const renderDashboardNav = () => (
     <nav className="hidden md:flex items-center space-x-6">
-      <a
-        href="/home/create"
+      <Link
+        href="/create"
         className="text-white hover:text-qorange-100 transition-colors duration-200 font-medium flex items-center space-x-1"
       >
         <FiPlus className="w-4 h-4" />
         <span>Criar Quiz</span>
-      </a>
-      <a
-        href="/home/play"
+      </Link>
+      <Link
+        href="/play"
         className="text-white hover:text-qorange-100 transition-colors duration-200 font-medium flex items-center space-x-1"
       >
         <FiPlay className="w-4 h-4" />
         <span>Jogar</span>
-      </a>
-      <a
-        href="/home/profile"
+      </Link>
+      <Link
+        href="/profile"
         className="text-white hover:text-qorange-100 transition-colors duration-200 font-medium flex items-center space-x-1"
       >
         <FiUser className="w-4 h-4" />
         <span>Perfil</span>
-      </a>
+      </Link>
     </nav>
   );
 
   // BOTÕES PARA VARIANT DEFAULT (público)
   const renderAuthButtons = () => (
-    <div className="flex items-center space-x-4">
+    <div className="md:flex items-center space-x-4 hidden">
       <Button 
         className="text-white border-white hover:bg-white hover:text-qorange-default"
         onClick={() => router.push("/login")}

@@ -250,7 +250,7 @@ export default function CreateQuiz() {
                 />
             )}
 
-            <nav className="flex justify-between mt-10">
+            <nav className="flex justify-between pb-5">
                 {currentStep === "questions" && questionModeSelected && (
                     <Button
                         variant="subtle"

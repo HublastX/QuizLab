@@ -73,7 +73,7 @@ export default function Registro() {
 
     return (
         <div className="flex flex-col items-center justify-center">
-            <h1 className="text-6xl font-black">Cadastrar-se</h1>
+            <h1 className="text-4xl font-black">Cadastrar-se</h1>
 
             {/* <p className="mt-2 opacity-70 text-sm">
                 Use as setas <strong>↑</strong> e <strong>↓</strong> para
@@ -82,7 +82,7 @@ export default function Registro() {
 
             <form
                 onSubmit={handleSubmit}
-                className="grid grid-cols-1 gap-4 mt-5 w-1/2 bg-layout-card p-6 rounded-lg"
+                className="grid grid-cols-1 gap-4 mt-5 md:w-1/2 bg-layout-card p-6 rounded-lg"
             >
                 {error && (
                     <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded">

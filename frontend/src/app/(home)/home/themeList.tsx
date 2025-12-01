@@ -20,8 +20,8 @@ export default function ThemeList() {
     }
 
     return (
-        <div className="flex flex-col justify-center gap-6 h-full border p-6 rounded-lg bg-layout-card">
-            <h1 className="text-2xl font-bold">Lista de Temas</h1>
+        <div className="flex flex-col justify-center gap-4 md:gap-6 h-full border p-4 md:p-6 rounded-lg bg-layout-card">
+            <h1 className="text-xl sm:text-2xl font-bold">Lista de Temas</h1>
             <div className="w-full flex flex-col gap-3 overflow-y-auto h-full">
                 {themes.length > 0 ? (
                     themes.map((theme) => (
@@ -35,7 +35,9 @@ export default function ThemeList() {
                         />
                     ))
                 ) : (
-                    <p>Nenhum tema encontrado</p>
+                    <p className="text-sm sm:text-base">
+                        Nenhum tema encontrado
+                    </p>
                 )}
             </div>
         </div>

@@ -47,12 +47,12 @@ export default function Home() {
     }, [router]);
 
     return (
-        <div className="flex h-full mt-6 space-x-24">
-            <div className="flex-1 h-full flex flex-col gap-9">
-                <h1 className="font-bold text-4xl capitalize">
+        <div className="flex h-full mt-4 md:mt-6 space-x-0 md:space-x-6 lg:space-x-24">
+            <div className="flex-1 h-full flex flex-col gap-6 md:gap-9 w-full">
+                <h1 className="font-bold text-2xl sm:text-3xl md:text-4xl capitalize">
                     Olá, {user?.name || "Visitante"}!
                 </h1>
-                <div className="grid grid-cols-3 mt-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-2 gap-4 md:gap-6">
                     <HomeCard
                         key={1}
                         title="Criar Quiz"

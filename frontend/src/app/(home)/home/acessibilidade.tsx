@@ -65,14 +65,22 @@ export default function Acessibilidade() {
     }, [useDys]);
 
     //
-    // Tamanho da fonte
+    // Tamanho da fonte - aplica escala proporcional
     //
     useEffect(() => {
         try {
+            const BASE_FONT_SIZE = 16; // Tamanho base padrão
+            const scaleFactor = fontSize / BASE_FONT_SIZE; // Calcula o fator de escala
+
+            // Aplica o fator de escala no html para escalar todos os tamanhos proporcionalmente
+            document.documentElement.style.fontSize = `${scaleFactor * 100}%`;
+
+            // Mantém a variável CSS para compatibilidade
             document.documentElement.style.setProperty(
                 "--base-font-size",
                 `${fontSize}px`
             );
+
             localStorage.setItem(STORAGE_FONT_SIZE, String(fontSize));
             // Dispara evento para sincronizar com outras páginas
             window.dispatchEvent(new Event("accessibilityChange"));
@@ -100,17 +108,17 @@ export default function Acessibilidade() {
     return (
         <div className="bg-layout-card p-4 rounded-lg border">
             <div className="overflow-hidden">
-                <div className="mb-6">
-                    <h1 className="text-2xl font-bold">
+                <div className="mb-4 md:mb-6">
+                    <h1 className="text-xl sm:text-2xl font-bold">
                         Configurações de Acessibilidade
                     </h1>
                 </div>
 
-                <div className="gap-4 grid grid-cols-2">
+                <div className="gap-4 grid grid-cols-1 md:grid-cols-2">
                     {/* AUMENTAR FONTE */}
-                    <div className="flex items-center justify-between p-4 rounded-lg border cursor-pointer hover:bg-hover transition-colors">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-lg border cursor-pointer hover:bg-hover transition-colors gap-3 sm:gap-0">
                         <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
+                            <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center shrink-0">
                                 <span className="font-bold text-lg">A+</span>
                             </div>
                             <div>
@@ -123,7 +131,7 @@ export default function Acessibilidade() {
                             </div>
                         </div>
 
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-2 shrink-0">
                             <button
                                 onClick={decreaseFont}
                                 className="w-8 h-8 bg-blue-500 text-white rounded-lg flex items-center justify-center"
@@ -145,9 +153,9 @@ export default function Acessibilidade() {
                     </div>
 
                     {/* DISLEXIA */}
-                    <div className="flex items-center justify-between p-4 rounded-lg border cursor-pointer hover:bg-hover transition-colors">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-lg border cursor-pointer hover:bg-hover transition-colors gap-3 sm:gap-0">
                         <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                            <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center shrink-0">
                                 <span className="font-bold text-xs">Dys</span>
                             </div>
                             <div>
@@ -160,7 +168,7 @@ export default function Acessibilidade() {
                             </div>
                         </div>
 
-                        <label className="flex items-center">
+                        <label className="flex items-center shrink-0">
                             <input
                                 type="checkbox"
                                 checked={useDys}
@@ -185,10 +193,10 @@ export default function Acessibilidade() {
                     </div>
 
                     {/* DALTONISMO */}
-                    <div className="col-span-2 p-4 border rounded-lg">
+                    <div className="col-span-1 md:col-span-2 p-4 border rounded-lg">
                         <h2 className="font-semibold mb-3">Daltonismo</h2>
 
-                        <div className="flex space-x-4">
+                        <div className="grid grid-cols-2 md:flex gap-2">
                             <Button
                                 size="sm"
                                 className={

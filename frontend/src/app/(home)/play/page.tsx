@@ -231,7 +231,7 @@ export default function PlayPage() {
                                 </p>
                             </div>
                         ) : (
-                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+                            <div className={`grid grid-cols-1 md:grid-cols-2  gap-4 ${selectedTheme ? "xl:grid-cols-3" : "xl:grid-cols-4"}`}>
                                 {themes.map((theme, index) => (
                                     <div key={theme.id} className="relative">
                                         {editingTheme?.id === theme.id ? (
@@ -249,7 +249,7 @@ export default function PlayPage() {
                                                     placeholder="Descrição"
                                                     className="w-full p-2 border rounded-lg bg-background text-sm min-h-[60px]"
                                                 />
-                                                <div className="flex gap-2">
+                                                <div className="md:flex flex-wrap gap-2 grid-cols-1 grid">
                                                     <Button onClick={() => setEditingTheme(null)} variant="subtle" size="sm" className="flex-1">
                                                         Cancelar
                                                     </Button>
@@ -491,7 +491,7 @@ export default function PlayPage() {
                                                         <p className="text-xs text-muted-foreground mb-4 line-clamp-2">
                                                             {subTopic.description}
                                                         </p>
-                                                        <div className="flex gap-2">
+                                                        <div className="md:flex gap-2 grid grid-cols-1">
                                                             <Link
                                                                 href={`/play/${subTopic.id}`}
                                                                 className="flex-1"

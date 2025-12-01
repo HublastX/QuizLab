@@ -39,15 +39,15 @@ export default function HomeCard({
     return (
         <Link
             href={href}
-            className={`${variantClasses[variantKey]} bg-layout-card items-center p-4 rounded-lg shadow-md h-35 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 hover:shadow-lg transition-all duration-200 border hover:shadow-xl hover:border-qorange-default hover:border-2 relative`}
+            className={`${variantClasses[variantKey]} bg-layout-card items-center p-4 rounded-lg shadow-md min-h-[140px] sm:h-35 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all duration-200 border hover:shadow-xl hover:border-qorange-default hover:border-2 relative`}
             aria-label={label}
             role="button"
             tabIndex={0}
         >
-            <div className='flex items-center space-x-2 mb-2'>
+            <div className="flex items-center space-x-2 mb-2">
                 {icon && variant != "theme" && (
-                    <span 
-                        aria-hidden="true" 
+                    <span
+                        aria-hidden="true"
                         className="shrink-0 text-center p-2 rounded-lg group-hover:text-qorange-default transition-colors duration-200"
                     >
                         {React.isValidElement(icon)
@@ -57,7 +57,7 @@ export default function HomeCard({
                                       strokeWidth?: number;
                                   }>,
                                   {
-                                      className: `size-6 ${colorClasses[colorKey]} text-center center group-hover:text-qorange-default transition-colors duration-200`,
+                                      className: `size-5 sm:size-6 ${colorClasses[colorKey]} text-center center group-hover:text-qorange-default transition-colors duration-200`,
                                       strokeWidth: 1,
                                   }
                               )
@@ -65,7 +65,7 @@ export default function HomeCard({
                     </span>
                 )}
                 {title && (
-                    <h2 className='text-xl font-medium group-hover:text-qorange-default transition-colors duration-200'>
+                    <h2 className="text-lg sm:text-xl font-medium group-hover:text-qorange-default transition-colors duration-200">
                         {title}
                         {description && variant == "theme" && (
                             <div className="text-sm font-normal mt-3">
@@ -79,10 +79,12 @@ export default function HomeCard({
             </div>
             {description && variant != "theme" && (
                 <div>
-                    <p className="leading-relaxed group-hover:text-qorange-default transition-colors duration-200">{description}</p>
+                    <p className="text-sm sm:text-base leading-relaxed group-hover:text-qorange-default transition-colors duration-200">
+                        {description}
+                    </p>
                 </div>
             )}
-            
+
             {cornerIcon && variant != "theme" && (
                 <div className="absolute bottom-3 right-3">
                     <span aria-hidden="true">
@@ -93,7 +95,8 @@ export default function HomeCard({
                                       size?: number;
                                   }>,
                                   {
-                                      className: "size-5 group-hover:text-qorange-default transition-colors duration-200",
+                                      className:
+                                          "size-4 sm:size-5 group-hover:text-qorange-default transition-colors duration-200",
                                       size: 20,
                                   }
                               )
